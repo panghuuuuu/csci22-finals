@@ -1,7 +1,7 @@
 /**
     A TestObject class to test the GameObject interface.
     @author Angelo Joaquin B. Alvarez (210295)
-    @author 
+    @author Ysabella B. Panghulan (214521)
     @version May 14, 2022
 **/
 /*
