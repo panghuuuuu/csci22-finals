@@ -3,7 +3,7 @@
     and non-animation updates by constantly calling their
     draw and update methods.
     @author Angelo Joaquin B. Alvarez (210295)
-    @author 
+    @author Ysabella B. Panghulan (214521)
     @version May 14, 2022
 **/
 /*

@@ -2,7 +2,7 @@
     A GameObject abstract class that handles all the common
     properties of the object present in the game.
     @author Angelo Joaquin B. Alvarez (210295)
-    @author 
+    @author Ysabella B. Panghulan (214521)
     @version May 14, 2022
 **/
 /*
