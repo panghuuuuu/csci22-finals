@@ -23,5 +23,5 @@
 package framework;
 
 public enum GameObjectID {
-    Player(), Test();
+    Player(), Test(), Test2();
 }

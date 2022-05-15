@@ -26,20 +26,47 @@ import framework.*;
 
 public class TestObject extends GameObject {
 
-    public TestObject(double xPos, double yPos, GameObjectID objectID) {
-        super(xPos, yPos, objectID);
+    public TestObject(double xPos, double yPos, double w, double h, GameObjectID objectID) {
+        super(xPos, yPos, w, h, objectID);
         //TODO Auto-generated constructor stub
     }
 
     @Override
     public void update(ArrayList<GameObject> gameObject) {
-        this.x += 5;   // Move to The Right 5 pixels
+        this.y += this.ySpeed;  
+        this.ySpeed = 5; // Move to The Right 5 pixels
+
+
+
+        for (int i = 0; i < gameObject.size(); i++) {
+            GameObject tempObject = gameObject.get(i);
+            switch(tempObject.getID()) {
+                case Test2:
+                    if(getHBounds().intersects(tempObject.getHBounds())) {
+                        if(tempObject.getXSpeed() < 0) {
+                            if(x < tempObject.getX() + tempObject.getWidth()/2) x = tempObject.getX() - width;
+                        } else if (tempObject.getXSpeed() > 0) {
+                            if(x > tempObject.getX() + tempObject.getWidth()/2) x = tempObject.getX() - width;
+                        }
+                    }
+                    if(getVBounds().intersects(tempObject.getVBounds())) {
+                        if(tempObject.getYSpeed() < 0) {
+                            if(x < tempObject.getY() + tempObject.getHeight()/2) y = tempObject.getY() - height;
+                        } else if (tempObject.getYSpeed() > 0) {
+                            if(x > tempObject.getY() + tempObject.getHeight()/2) y = tempObject.getY() - height;
+                        }
+                    }
+                    
+                default:
+                    break;
+            }
+        } 
     }
 
     @Override
     public void draw(Graphics2D g2d) {
         g2d.setColor(new Color(255,0,0));
-        g2d.fillRect((int) x,(int) y, 50, 50); // Creates a Rectangle    
+        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle    
     }
-    
+
 }

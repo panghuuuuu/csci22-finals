@@ -29,7 +29,8 @@ import gameobjects.*;
 public class GameCanvas {
 
     public GameCanvas() {
-        addGameObject(new TestObject(50, 50, GameObjectID.Test));
+        addGameObject(new TestObject(50, 50, 50, 50, GameObjectID.Test));
+        addGameObject(new TestObject2(50, 1000, 100, 100, GameObjectID.Test2));
     }
     
     //Declaration of Variables

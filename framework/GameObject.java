@@ -28,9 +28,8 @@ import java.awt.*;
 public abstract class GameObject {
 
     protected GameObjectID id;
-    protected double x, y;
+    protected double x, y, width, height;
     protected double xSpeed = 0, ySpeed = 0;
-
 
     /**
     Constructor Method for a GameObject instance
@@ -38,9 +37,11 @@ public abstract class GameObject {
         @param yPos The Initial y Position of the Object {@code Double}
         @param ObjectID The Object ID of an Object {@code GameObjectID}
     **/
-    public GameObject(double xPos, double yPos, GameObjectID objectID) {
+    public GameObject(double xPos, double yPos, double w, double h, GameObjectID objectID) {
         this.x = xPos;
         this.y = yPos;
+        this.width = w;
+        this.height = h;
         this.id = objectID;
     }
 
@@ -58,6 +59,12 @@ public abstract class GameObject {
     }
     public double getY() {
         return this.y;
+    }
+    public double getWidth() {
+        return this.width;
+    }
+    public double getHeight() {
+        return this.height;
     }
 
     public GameObjectID getID() {
@@ -85,5 +92,28 @@ public abstract class GameObject {
     public void setYSpeed(double ySpd) {
         this.ySpeed = ySpd;
     }
+    public void setWidth(double w) {
+        this.width = w;
+    }
+    public void setHeight(double h) {
+        this.height = h;
+    }
 
+    public Rectangle getHBounds() {
+        double hx = this.x + this.xSpeed;
+        double hy = this.y;
+        double hw = this.width + this.xSpeed/2;
+        double hh = this.height;
+
+        return new Rectangle((int) hx, (int) hy, (int) hw, (int) hh);
+    }
+
+    public Rectangle getVBounds() {
+        double vx = this.x;
+        double vy = this.y + this.ySpeed;
+        double vw = this.width;
+        double vh = this.height + this.ySpeed/2;
+
+        return new Rectangle((int) vx, (int) vy, (int) vw, (int) vh);
+    }
 }
