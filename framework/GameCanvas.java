@@ -22,20 +22,42 @@
 
 package framework;
 
-import java.util.*;
+import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import gameobjects.*;
 
-public class GameCanvas {
-
-    public GameCanvas() {
-        addGameObject(new TestObject(50, 50, 50, 50, GameObjectID.Test));
-        addGameObject(new TestObject2(50, 1000, 100, 100, GameObjectID.Test2));
-    }
-    
+public class GameCanvas extends JComponent {
     //Declaration of Variables
     public ArrayList<GameObject> gameObject = new ArrayList<GameObject>();
+    public ArrayList<Player> p;
     private GameObject temp;
+    private Player p1;
+    private Player p2;
+    private int width;
+    private int height;
+
+
+    public GameCanvas(int w, int h) {
+        /*addGameObject(new TestObject(50, 50, 50, 50, GameObjectID.Test));
+        addGameObject(new TestObject2(50, 1000, 100, 100, GameObjectID.Test2));*/
+        p = new ArrayList<Player>();
+        width = w;
+        height = h;
+        setPreferredSize(new Dimension(width, height));
+    }
+    
+    public void newPlayer(int n) {
+        if (n == 1) {
+            p1 = new Player(50, 50, 50, 50, GameObjectID.Test); 
+            p2 = new Player(50, 1000, 100, 100, GameObjectID.Test2);
+        } else if (n == 2) {
+            p1 = new Player(50, 1000, 100, 100, GameObjectID.Test2); 
+            p2 = new Player(50, 50, 50, 50, GameObjectID.Test);
+        }
+        addGameObject(p1);
+        addGameObject(p2);
+    }
 
     /** Iterates through every gameObject and calls its update method */
     public void update() {
@@ -46,7 +68,11 @@ public class GameCanvas {
     }
 
     /** Iterates through every gameObject and calls its draw method */
-    public void draw(Graphics2D g2d) {
+    protected void paintComponent(Graphics2D g2d) {
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setColor(new Color(0,0,0));
+        g2d.fillRect(0, 0, width, height);
+        g2d.setRenderingHints(rh);
         for (int i = 0; i < gameObject.size(); i++) {
             temp = gameObject.get(i);
             temp.draw(g2d);
@@ -60,5 +86,11 @@ public class GameCanvas {
         this.gameObject.remove(object);
     }
 
-
+    public Player getP1() {
+        return p1;
+     }
+ 
+    public Player getP2() {
+         return p2;
+    }
 }
