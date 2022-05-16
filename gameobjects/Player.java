@@ -7,22 +7,39 @@ import java.util.ArrayList;
 import framework.*;
 
 public class Player extends GameObject {
-
+    private double movementSpeed;
 
     public Player(double xPos, double yPos, double w, double h, GameObjectID objectID) {
         super(xPos, yPos, w, h, objectID);
-        setXSpeed(2);
-        setYSpeed(2);
+        movementSpeed = 2;
     }
 
     @Override
     public void update(ArrayList<GameObject> gameObject) {
         if (this.id == GameObjectID.PlayerOne) {
             
-            if (KeyListener.right) moveX(xSpeed); 
-            if (KeyListener.left) moveX(-xSpeed); 
-            if (KeyListener.up) moveY(-ySpeed);;
-            if (KeyListener.down) moveY(ySpeed);
+            if (KeyListener.right) moveX(movementSpeed); 
+
+            if (KeyListener.left) moveX(-movementSpeed); 
+            if (KeyListener.up) moveY(-movementSpeed);
+            if (KeyListener.down) moveY(movementSpeed);
+
+            //Collision
+        for (int i = 0; i < gameObject.size(); i++) {
+            GameObject tempObject = gameObject.get(i);
+            switch(tempObject.getID()) {
+                case PlayerTwo:
+                    if(getHBounds().intersects(tempObject.getHBounds())) {
+                        System.out.println("X COLLISION");
+                    }
+                    if(getVBounds().intersects(tempObject.getVBounds())) {
+                        System.out.println("Y COLLISION");
+                    }
+                    break;
+                default:
+                    break;
+                }
+            } 
         }
     }
 
