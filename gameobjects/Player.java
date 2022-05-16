@@ -42,24 +42,37 @@ public class Player extends GameObject {
             GameObject tempObject = gameObject.get(i);
             switch(tempObject.getID()) {
                 case PlayerTwo:
-                    if(getHBounds().intersects(tempObject.getHBounds())) {         
-                        if(xSpeed > 0) {
-                            xSpeed = 0;
-                            x = tempObject.getX() - tempObject.getWidth();
-                        } else if (xSpeed < 0) {
-                            xSpeed = 0;
-                            x = tempObject.getX() + tempObject.getWidth();
+                    if(getHBounds().intersects(tempObject.getHBounds())) { 
+                        if(tempObject.getXSpeed() < 0) {
+                            if(x < tempObject.getX() + tempObject.getWidth()/2) x = tempObject.getX() - tempObject.getWidth();
+                        } else if (tempObject.getXSpeed() > 0) {
+                            if(x > tempObject.getX() + tempObject.getWidth()/2) x = tempObject.getX() + tempObject.getWidth();
                         }
+                       //if(tempObject.getXSpeed() > 0) {
+                       //    x = tempObject.getX() + tempObject.getWidth();
+                       //} else if (tempObject.getXSpeed() < 0) {
+                       //    x = tempObject.getX() - tempObject.getWidth();
+                       //}
+                        //if(xSpeed > 0) {
+                        //    x = tempObject.getX() - tempObject.getWidth();
+                        //} else if (xSpeed < 0) {
+                        //    x = tempObject.getX() + tempObject.getWidth();
+                        //}
                     }
 
                     if(getVBounds().intersects(tempObject.getVBounds())) {
-                        if(ySpeed > 0) {
-                            ySpeed = 0;
-                            y = tempObject.getY() - tempObject.getHeight();
-                        } else if (ySpeed < 0) {
-                            ySpeed = 0;
-                            y = tempObject.getY() + tempObject.getHeight();
+                        if(tempObject.getYSpeed() < 0) {
+                            if(y < tempObject.getY() + tempObject.getHeight()/2) y = tempObject.getY() - tempObject.getHeight();
+                        } else if (tempObject.getYSpeed() > 0) {
+                            if(y > tempObject.getY() + tempObject.getHeight()/2) y = tempObject.getY() + tempObject.getHeight();
                         }
+                       //if(ySpeed > 0) {
+                       //    ySpeed = 0;
+                       //    y = tempObject.getY() - tempObject.getHeight();
+                       //} else if (ySpeed < 0) {
+                       //    ySpeed = 0;
+                       //    y = tempObject.getY() + tempObject.getHeight();
+                       //}
                     }
                     break;
                 default:

@@ -49,6 +49,7 @@ public class GameFrame extends Canvas implements Runnable {
     private ReadFromServer rfsRunnable;
     private WriteToServer wtsRunnable;
     private int playerID;
+    private double[] PlayerPositions;
 
     // Constructor method for GameFrame class
     public GameFrame() {
@@ -197,11 +198,13 @@ public class GameFrame extends Canvas implements Runnable {
             try {
                 while (true) {
                     if (GC.getP2() == null) {
-                        System.out.println("PLAYER TWO NOT INITIALIZED");
+                        System.out.println("PLAYER ONE NOT INITIALIZED");
                     }
                     if (GC.getP2() != null) {
                         GC.getP2().setX(dataIn.readDouble());
                         GC.getP2().setY(dataIn.readDouble());
+                        GC.getP2().setXSpeed(dataIn.readDouble());
+                        GC.getP2().setYSpeed(dataIn.readDouble());
                     }
                 }
             } catch (IOException ex) {
@@ -240,6 +243,8 @@ public class GameFrame extends Canvas implements Runnable {
                     if (GC.getP1() != null) {
                         dataOut.writeDouble(GC.getP1().getX());
                         dataOut.writeDouble(GC.getP1().getY());
+                        dataOut.writeDouble(GC.getP1().getXSpeed());
+                        dataOut.writeDouble(GC.getP1().getYSpeed());
                         dataOut.flush();
                         try {
                             Thread.sleep(25);

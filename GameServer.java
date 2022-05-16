@@ -26,6 +26,7 @@ public class GameServer {
     // (optional) private ArrayList<Socket> sockets;
     private int numPlayer;
     private int maxPlayers;
+    private double[] p1props, p2props;
 
     private Socket p1Socket;
     private Socket p2Socket;
@@ -40,10 +41,8 @@ public class GameServer {
         System.out.println("=== Game Server ===");
         numPlayer = 0;
         maxPlayers = 2;
-        p1x = 50;
-        p1y = 50;
-        p2x = 200;
-        p2y = 200;
+        p1props = new double[] {50, 50, 0, 0};
+        p2props = new double[] {200, 200, 0, 0};
         try {
             ss = new ServerSocket(45371);
         } catch (IOException ex) {
@@ -104,11 +103,13 @@ public class GameServer {
             try {
                 while (true) {
                     if (playerID == 1) {
-                        p1x = dataIn.readDouble();
-                        p1y = dataIn.readDouble();
+                        for (int i = 0; i < p1props.length; i++) p1props[i] = dataIn.readDouble();
+                        //p1x = dataIn.readDouble();
+                        //p1y = dataIn.readDouble();
                     } else {
-                        p2x = dataIn.readDouble();
-                        p2y = dataIn.readDouble();
+                        for (int i = 0; i < p2props.length; i++) p2props[i] = dataIn.readDouble();
+                        //p2x = dataIn.readDouble();
+                        //p2y = dataIn.readDouble();
                     }
                 }
             } catch (IOException ex) {
@@ -131,12 +132,14 @@ public class GameServer {
             try {
                 while (true) {
                     if (playerID == 1) {
-                        dataOut.writeDouble(p2x);
-                        dataOut.writeDouble(p2y);
+                        for (int i = 0; i < p2props.length; i++) dataOut.writeDouble(p2props[i]);
+                        //dataOut.writeDouble(p2x);
+                        //dataOut.writeDouble(p2y);
                         dataOut.flush();
                     } else {
-                        dataOut.writeDouble(p1x);
-                        dataOut.writeDouble(p1y);
+                        for (int i = 0; i < p1props.length; i++) dataOut.writeDouble(p1props[i]);
+                        //dataOut.writeDouble(p1x);
+                        //dataOut.writeDouble(p1y);
                         dataOut.flush();
                     }
                     try {
