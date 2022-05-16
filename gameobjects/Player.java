@@ -44,35 +44,28 @@ public class Player extends GameObject {
                 case PlayerTwo:
                     if(getHBounds().intersects(tempObject.getHBounds())) { 
                         if(tempObject.getXSpeed() < 0) {
-                            if(x < tempObject.getX() + tempObject.getWidth()/2) x = tempObject.getX() - tempObject.getWidth();
+                            x = tempObject.getX() - tempObject.getWidth();
                         } else if (tempObject.getXSpeed() > 0) {
-                            if(x > tempObject.getX() + tempObject.getWidth()/2) x = tempObject.getX() + tempObject.getWidth();
+                            x = tempObject.getX() + tempObject.getWidth();
                         }
-                       //if(tempObject.getXSpeed() > 0) {
-                       //    x = tempObject.getX() + tempObject.getWidth();
-                       //} else if (tempObject.getXSpeed() < 0) {
-                       //    x = tempObject.getX() - tempObject.getWidth();
-                       //}
-                        //if(xSpeed > 0) {
-                        //    x = tempObject.getX() - tempObject.getWidth();
-                        //} else if (xSpeed < 0) {
-                        //    x = tempObject.getX() + tempObject.getWidth();
-                        //}
+                        if(xSpeed > 0) {
+                            x = tempObject.getX() - tempObject.getWidth() + xSpeed;
+                        } else if (xSpeed < 0) {
+                            x = tempObject.getX() + tempObject.getWidth() + xSpeed;
+                        }
                     }
 
                     if(getVBounds().intersects(tempObject.getVBounds())) {
                         if(tempObject.getYSpeed() < 0) {
-                            if(y < tempObject.getY() + tempObject.getHeight()/2) y = tempObject.getY() - tempObject.getHeight();
+                            y = tempObject.getY() - tempObject.getHeight();
                         } else if (tempObject.getYSpeed() > 0) {
-                            if(y > tempObject.getY() + tempObject.getHeight()/2) y = tempObject.getY() + tempObject.getHeight();
+                            y = tempObject.getY() + tempObject.getHeight();
+                        }                    
+                        if(ySpeed > 0) {
+                           y = tempObject.getY() - tempObject.getHeight() + ySpeed;
+                        } else if (ySpeed < 0) {
+                           y = tempObject.getY() + tempObject.getHeight() + ySpeed;
                         }
-                       //if(ySpeed > 0) {
-                       //    ySpeed = 0;
-                       //    y = tempObject.getY() - tempObject.getHeight();
-                       //} else if (ySpeed < 0) {
-                       //    ySpeed = 0;
-                       //    y = tempObject.getY() + tempObject.getHeight();
-                       //}
                     }
                     break;
                 default:
@@ -85,13 +78,13 @@ public class Player extends GameObject {
     @Override
     public void draw(Graphics2D g2d) {
 
+        g2d.setColor(new Color(255,0,0));
+        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle
+
         g2d.setColor(new Color(255,255,255));
         g2d.fill(getHBounds());
         
         g2d.setColor(new Color(0,255,0));
         g2d.fill(getVBounds());
-
-        g2d.setColor(new Color(255,0,0));
-        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle
     }
 }
