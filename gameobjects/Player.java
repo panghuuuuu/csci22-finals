@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import framework.*;
 
 public class Player extends GameObject {
-    private KeyListener playerControl;
 
     public Player(double xPos, double yPos, double w, double h, GameObjectID objectID) {
         super(xPos, yPos, w, h, objectID);
-        playerControl = new KeyListener();
     }
 
     @Override
@@ -19,10 +17,10 @@ public class Player extends GameObject {
         x += xSpeed;
         y += ySpeed;
 
-        if (playerControl.down) ySpeed = 1;
-        if (playerControl.left) xSpeed = -1;
-        if (playerControl.right) xSpeed = 1;
-        if (playerControl.up) ySpeed = -1;
+        if (KeyListener.down) ySpeed = 1;
+        if (KeyListener.left) xSpeed = -1;
+        if (KeyListener.right) xSpeed = 1;
+        if (KeyListener.up) ySpeed = -1;
     }
 
     @Override

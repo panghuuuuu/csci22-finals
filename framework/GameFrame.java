@@ -65,9 +65,11 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.setTitle("Player " + playerID);
         gameFrame.setVisible(true);
         gameFrame.add(this);
+        gameFrame.addKeyListener(new KeyListener(GC));
+        this.addKeyListener(new KeyListener(GC));
         gameFrame.pack();
         gameFrame.setFocusable(true);
-        //GC.newPlayer(playerID);
+        GC.newPlayer(playerID);
         //setUpAnimationTimer();
     }
 

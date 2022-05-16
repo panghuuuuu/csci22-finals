@@ -39,25 +39,23 @@ public class GameCanvas extends JComponent {
 
 
     public GameCanvas(int w, int h) {
-        addGameObject(new Player(50, 50, 50, 50, GameObjectID.PlayerOne));
-        addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerTwo));
+        //addGameObject(new Player(50, 50, 50, 50, GameObjectID.PlayerOne));
+        //addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerTwo));
         /*p = new ArrayList<Players>();
         width = w;
         height = h;
         setPreferredSize(new Dimension(width, height));*/
     }
     
-    /* public void newPlayer(int n) {
+    public void newPlayer(int n) {
         if (n == 1) {
-            p1 = new Players(10, 250); 
-            p2 = new Players(300, 500);
+            addGameObject(new Player(50, 50, 50, 50, GameObjectID.PlayerOne));
+            addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerTwo));
         } else if (n == 2) {
-            p1 = new Players(300, 500); 
-            p2 = new Players(10, 250);
+            addGameObject(new Player(50, 50, 50, 50, GameObjectID.PlayerTwo));
+            addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerOne));
         }
-        p.add(p1);
-        p.add(p2);
-    } */
+    }
 
     /** Iterates through every gameObject and calls its update method */
     public void update() {

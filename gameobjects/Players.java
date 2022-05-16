@@ -24,7 +24,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import javax.swing.ImageIcon;
 
-public class Player {
+public class Players {
     double x;
     double y;
     int width;
@@ -33,7 +33,7 @@ public class Player {
     double verticalSpeed;
     private ImageIcon image;
 
-    public Player(double x, double y) {
+    public Players(double x, double y) {
         this.x = x;
         this.y = y;
         //image = new ImageIcon(getClass().getResource("/sprites/samplesprite1.png"));
@@ -98,7 +98,7 @@ public class Player {
         y = n;
     }
    
-    public Boolean isColliding(Player r) {
+    public Boolean isColliding(Players r) {
         return !(this.x + this.width <= r.getX() ||
                 this.x >= r.getX() + r.getWidth() ||
                 this.y + this.height <= r.getY() ||

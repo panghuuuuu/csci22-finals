@@ -86,14 +86,6 @@ public abstract class GameObject {
         this.y = yPos;
     }
 
-    public void moveX(double n) {
-        x += n;
-    }
-
-    public void moveY(double n) {
-        y += n;
-    }
-
     public void setXSpeed(double xSpd) {
         this.xSpeed = xSpd;
     }

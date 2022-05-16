@@ -3,12 +3,18 @@ package framework;
 import java.awt.event.*;
 
 public class KeyListener extends KeyAdapter {
-    public boolean right = false, left = false, up = false, down = false;
+    public static boolean right = false, left = false, up = false, down = false;
+    public GameCanvas gCanvas;
 
+    public KeyListener(GameCanvas gc) {
+        this.gCanvas = gc;
+        gc.setFocusable(true);
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
+        System.out.printf("up: %b down: %b, left: %b, right: %b%n", up, down, left, right);
 
         if (key == KeyEvent.VK_ESCAPE) {
             System.exit(1);
@@ -30,6 +36,7 @@ public class KeyListener extends KeyAdapter {
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
+        System.out.printf("up: %b down: %b, left: %b, right: %b%n", up, down, left, right);
 
         if(key == KeyEvent.VK_D) { 
             right = false;
