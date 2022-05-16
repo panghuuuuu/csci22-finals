@@ -58,7 +58,6 @@ public class GameServer {
                 Socket sock = ss.accept();
                 DataInputStream dataIn = new DataInputStream(sock.getInputStream());
                 DataOutputStream dataOut = new DataOutputStream(sock.getOutputStream());
-
                 numPlayer++;
                 dataOut.writeInt(numPlayer);
                 System.out.println("Player #" + numPlayer + " has connected.");
