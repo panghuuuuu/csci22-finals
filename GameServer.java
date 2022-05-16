@@ -40,10 +40,10 @@ public class GameServer {
         System.out.println("=== Game Server ===");
         numPlayer = 0;
         maxPlayers = 2;
-        p1x = 10;
-        p1y = 250;
-        p2x = 300;
-        p2y = 500;
+        p1x = 50;
+        p1y = 50;
+        p2x = 200;
+        p2y = 200;
         try {
             ss = new ServerSocket(45371);
         } catch (IOException ex) {

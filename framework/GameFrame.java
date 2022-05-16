@@ -64,9 +64,8 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setTitle("Player " + playerID);
         gameFrame.setVisible(true);
-        gameFrame.add(this);
-        gameFrame.addKeyListener(new KeyListener(GC));
         this.addKeyListener(new KeyListener(GC));
+        gameFrame.add(this);
         gameFrame.pack();
         gameFrame.setFocusable(true);
         GC.newPlayer(playerID);
@@ -197,6 +196,9 @@ public class GameFrame extends Canvas implements Runnable {
         public void run() {
             try {
                 while (true) {
+                    if (GC.getP2() == null) {
+                        System.out.println("PLAYER TWO NOT INITIALIZED");
+                    }
                     if (GC.getP2() != null) {
                         GC.getP2().setX(dataIn.readDouble());
                         GC.getP2().setY(dataIn.readDouble());
@@ -232,6 +234,9 @@ public class GameFrame extends Canvas implements Runnable {
         public void run() {
             try {
                 while (true) {
+                    if (GC.getP1() == null) {
+                        System.out.println("PLAYER ONE NOT INITIALIZED");
+                    }
                     if (GC.getP1() != null) {
                         dataOut.writeDouble(GC.getP1().getX());
                         dataOut.writeDouble(GC.getP1().getY());

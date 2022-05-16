@@ -8,19 +8,22 @@ import framework.*;
 
 public class Player extends GameObject {
 
+
     public Player(double xPos, double yPos, double w, double h, GameObjectID objectID) {
         super(xPos, yPos, w, h, objectID);
+        setXSpeed(2);
+        setYSpeed(2);
     }
 
     @Override
     public void update(ArrayList<GameObject> gameObject) {
-        x += xSpeed;
-        y += ySpeed;
-
-        if (KeyListener.down) ySpeed = 1; else ySpeed = 0;
-        if (KeyListener.left) xSpeed = -1; else xSpeed = 0;
-        if (KeyListener.right) xSpeed = 1; else xSpeed = 0;
-        if (KeyListener.up) ySpeed = -1; else ySpeed = 0;
+        if (this.id == GameObjectID.PlayerOne) {
+            
+            if (KeyListener.right) moveX(xSpeed); 
+            if (KeyListener.left) moveX(-xSpeed); 
+            if (KeyListener.up) moveY(-ySpeed);;
+            if (KeyListener.down) moveY(ySpeed);
+        }
     }
 
     @Override
@@ -29,4 +32,11 @@ public class Player extends GameObject {
         g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle    
     }
     
+    private void moveX(double speed) {
+        this.x += speed;
+    }
+    private void moveY(double speed) {
+        this.y += speed;
+    }
+
 }
