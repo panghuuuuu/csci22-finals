@@ -17,10 +17,10 @@ public class Player extends GameObject {
         x += xSpeed;
         y += ySpeed;
 
-        if (KeyListener.down) ySpeed = 1;
-        if (KeyListener.left) xSpeed = -1;
-        if (KeyListener.right) xSpeed = 1;
-        if (KeyListener.up) ySpeed = -1;
+        if (KeyListener.down) ySpeed = 1; else ySpeed = 0;
+        if (KeyListener.left) xSpeed = -1; else xSpeed = 0;
+        if (KeyListener.right) xSpeed = 1; else xSpeed = 0;
+        if (KeyListener.up) ySpeed = -1; else ySpeed = 0;
     }
 
     @Override
