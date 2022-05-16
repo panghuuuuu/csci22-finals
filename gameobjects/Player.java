@@ -17,23 +17,49 @@ public class Player extends GameObject {
     @Override
     public void update(ArrayList<GameObject> gameObject) {
         if (this.id == GameObjectID.PlayerOne) {
+            xSpeed = 0;
+            ySpeed = 0;
             
-            if (KeyListener.right) moveX(movementSpeed); 
+            if (KeyListener.right) {
+                setXSpeed(movementSpeed);
+                moveX(xSpeed);
+            }
+            if (KeyListener.left) {
+                setXSpeed(-movementSpeed); 
+                moveX(xSpeed);
+            }
+            if (KeyListener.up) {
+                setYSpeed(-movementSpeed);
+                moveY(ySpeed);
+            }
+            if (KeyListener.down) {
+                setYSpeed(movementSpeed);
+                moveY(ySpeed);
+            }
 
-            if (KeyListener.left) moveX(-movementSpeed); 
-            if (KeyListener.up) moveY(-movementSpeed);
-            if (KeyListener.down) moveY(movementSpeed);
-
-            //Collision
+        //Collision
         for (int i = 0; i < gameObject.size(); i++) {
             GameObject tempObject = gameObject.get(i);
             switch(tempObject.getID()) {
                 case PlayerTwo:
-                    if(getHBounds().intersects(tempObject.getHBounds())) {
-                        System.out.println("X COLLISION");
+                    if(getHBounds().intersects(tempObject.getHBounds())) {         
+                        if(xSpeed > 0) {
+                            xSpeed = 0;
+                            x = tempObject.getX() - tempObject.getWidth();
+                        } else if (xSpeed < 0) {
+                            xSpeed = 0;
+                            x = tempObject.getX() + tempObject.getWidth();
+                        }
                     }
+
                     if(getVBounds().intersects(tempObject.getVBounds())) {
-                        System.out.println("Y COLLISION");
+                        if(ySpeed > 0) {
+                            ySpeed = 0;
+                            y = tempObject.getY() - tempObject.getHeight();
+                        } else if (ySpeed < 0) {
+                            ySpeed = 0;
+                            y = tempObject.getY() + tempObject.getHeight();
+                        }
                     }
                     break;
                 default:
@@ -45,15 +71,14 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Graphics2D g2d) {
-        g2d.setColor(new Color(255,0,0));
-        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle    
-    }
-    
-    private void moveX(double speed) {
-        this.x += speed;
-    }
-    private void moveY(double speed) {
-        this.y += speed;
-    }
 
+        g2d.setColor(new Color(255,255,255));
+        g2d.fill(getHBounds());
+        
+        g2d.setColor(new Color(0,255,0));
+        g2d.fill(getVBounds());
+
+        g2d.setColor(new Color(255,0,0));
+        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle
+    }
 }

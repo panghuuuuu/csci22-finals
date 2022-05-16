@@ -53,6 +53,16 @@ public abstract class GameObject {
      * @param g2d Graphics2D object**/
     public abstract void draw(Graphics2D g2d);
 
+
+    public void moveX(double speed) {
+        this.x += speed;
+    }
+    public void moveY(double speed) {
+        this.y += speed;
+    }
+
+
+    
     //Accessor Methods
     public double getX() {
         return this.x;
@@ -101,17 +111,17 @@ public abstract class GameObject {
 
     public Rectangle getHBounds() {
         double hx = this.x + this.xSpeed;
-        double hy = this.y;
+        double hy = this.y + 2;
         double hw = this.width + this.xSpeed/2;
-        double hh = this.height;
+        double hh = this.height - 2;
 
         return new Rectangle((int) hx, (int) hy, (int) hw, (int) hh);
     }
 
     public Rectangle getVBounds() {
-        double vx = this.x;
+        double vx = this.x + 2;
         double vy = this.y + this.ySpeed;
-        double vw = this.width;
+        double vw = this.width - 2;
         double vh = this.height + this.ySpeed/2;
 
         return new Rectangle((int) vx, (int) vy, (int) vw, (int) vh);
