@@ -21,13 +21,11 @@
 package gameobjects;
 
 import java.awt.*;
-import java.util.*;
-import framework.*;
 import java.awt.geom.*;
 
 import javax.swing.ImageIcon;
 
-public class Player extends GameObject{
+public class Player {
     double x;
     double y;
     int width;
@@ -36,42 +34,75 @@ public class Player extends GameObject{
     double verticalSpeed;
     private ImageIcon image;
 
-    public Player(double xPos, double yPos, double w, double h, GameObjectID objectID) {
-        super(xPos, yPos, w, h, objectID);
-        //TODO Auto-generated constructor stub
+    public Player(double x, double y) {
+        this.x = x;
+        this.y = y;
         //image = new ImageIcon(getClass().getResource("/sprites/samplesprite1.png"));
     }
 
-    @Override
-    public void update(ArrayList<GameObject> gameObject) {
-        for (int i = 0; i < gameObject.size(); i++) {
-            GameObject tempObject = gameObject.get(i);
-            switch(tempObject.getID()) {
-                case Test:
-                    if(getHBounds().intersects(tempObject.getHBounds())) {
-                        if(tempObject.getXSpeed() < 0) {
-                            if(x < tempObject.getX() + tempObject.getWidth()/2) x = tempObject.getX() - width;
-                        } else if (tempObject.getXSpeed() > 0) {
-                            if(x > tempObject.getX() + tempObject.getWidth()/2) x = tempObject.getX() - width;
-                        }
-                    }
-                    if(getVBounds().intersects(tempObject.getVBounds())) {
-                        if(tempObject.getYSpeed() < 0) {
-                            if(x < tempObject.getY() + tempObject.getHeight()/2) y = tempObject.getY() - height;
-                        } else if (tempObject.getYSpeed() > 0) {
-                            if(x > tempObject.getY() + tempObject.getHeight()/2) y = tempObject.getY() - height;
-                        }
-                    }
-                    
-                default:
-                    break;
-            }
-        } 
+    public void draw(Graphics2D g2d) {
+        Rectangle2D.Double s = new Rectangle2D.Double(x,y, 50, 50);
+        g2d.setColor(Color.RED);
+        g2d.fill(s);
     }
 
-    @Override
-    public void draw(Graphics2D g2d) {
-        g2d.setColor(new Color(0,0,255));
-        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle    
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getHorizontalSpeed() {
+        return horizontalSpeed;
+    }
+
+    public double getVerticalSpeed() {
+        return verticalSpeed;
+    }
+
+    public void reverseHorizontal() {
+        horizontalSpeed *= -1;
+    }
+
+    public void reverseVertical() {
+        verticalSpeed *= -1;
+    }
+
+    public void changeDirection() {
+        reverseHorizontal();
+        reverseVertical();
+    }
+
+    public void moveX(double n) {
+        x += n;
+    }
+
+    public void moveY(double n) {
+        y += n;
+    }
+
+    public void setX(double n) {
+        x = n;
+    }
+
+    public void setY(double n) {
+        y = n;
+    }
+   
+    public Boolean isColliding(Player r) {
+        return !(this.x + this.width <= r.getX() ||
+                this.x >= r.getX() + r.getWidth() ||
+                this.y + this.height <= r.getY() ||
+                this.y >= r.getY() + r.getHeight());
     }
 }

@@ -33,11 +33,11 @@ import java.io.IOException;
 import java.net.*;
 
 public class GameFrame extends Canvas implements Runnable {
-    
-    //Declaration of Variables
+
+    // Declaration of Variables
     private JFrame gameFrame;
     public final static int SCREEN_WIDTH = 1080, SCREEN_HEIGHT = 720;
-    private final double UPDATE_RATE = 1.0d/60.0d;
+    private final double UPDATE_RATE = 1.0d / 60.0d;
     private int FPS, UPS;
     private long nextTime;
     private boolean running;
@@ -50,7 +50,7 @@ public class GameFrame extends Canvas implements Runnable {
     private WriteToServer wtsRunnable;
     private int playerID;
 
-    //Constructor method for GameFrame class
+    // Constructor method for GameFrame class
     public GameFrame() {
         gameFrame = new JFrame();
         GC = new GameCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -63,7 +63,7 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.setResizable(false);
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setTitle("Player " + playerID);
-        gameFrame.setVisible(true);  
+        gameFrame.setVisible(true);
         gameFrame.add(this);
         gameFrame.pack();
         GC.newPlayer(playerID);
@@ -75,16 +75,18 @@ public class GameFrame extends Canvas implements Runnable {
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 double speed = 5;
-                if (up) {
-                    GC.getP1().moveY(-speed); 
-                } else if(down) {
+                if (up)
+                    GC.getP1().moveY(-speed);
+                if (down)
                     GC.getP1().moveY(speed);
-                } else if(left) {
-                    GC.getP1().moveX(-speed);    
-                } else if(right) {
+                if (left)
+                    GC.getP1().moveX(-speed);
+                if (right)
                     GC.getP1().moveX(speed);
+                if (push && GC.getP1().isColliding(GC.getP2())) {
+                    GC.getP2().moveX(-speed); // mali pa to di gumagana
                 }
-                GC.repaint();    
+                GC.repaint();
             }
         };
         timer = new Timer(10, al);
@@ -99,48 +101,34 @@ public class GameFrame extends Canvas implements Runnable {
 
             public void keyPressed(KeyEvent ke) {
                 int keyCode = ke.getKeyCode();
-                switch (keyCode) {
-                    case KeyEvent.VK_UP:
-                        up = true;
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        down = true;
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        left = true;
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        right = true;
-                        break;
-                    case KeyEvent.VK_SPACE:
-                        push = true;
-                        break;
-                }
+                if (keyCode == KeyEvent.VK_UP)
+                    up = true;
+                if (keyCode == KeyEvent.VK_DOWN)
+                    down = true;
+                if (keyCode == KeyEvent.VK_LEFT)
+                    left = true;
+                if (keyCode == KeyEvent.VK_RIGHT)
+                    right = true;
+                if (keyCode == KeyEvent.VK_SPACE)
+                    push = true;
             }
 
             public void keyReleased(KeyEvent ke) {
                 int keyCode = ke.getKeyCode();
-                switch (keyCode) {
-                    case KeyEvent.VK_UP:
-                        up = false;
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        down = false;
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        left = false;
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        right = false;
-                        break;
-                    case KeyEvent.VK_SPACE:
-                        push = false;
-                        break;
-                }
+                if (keyCode == KeyEvent.VK_UP)
+                    up = false;
+                if (keyCode == KeyEvent.VK_DOWN)
+                    down = false;
+                if (keyCode == KeyEvent.VK_LEFT)
+                    left = false;
+                if (keyCode == KeyEvent.VK_RIGHT)
+                    right = false;
+                if (keyCode == KeyEvent.VK_SPACE)
+                    push = false;
             }
         };
-        this.addKeyListener(kl);
-        this.setFocusable(true);
+        gameFrame.addKeyListener(kl);
+        gameFrame.setFocusable(true);
     }
 
     public void connectToServer() {
@@ -156,7 +144,7 @@ public class GameFrame extends Canvas implements Runnable {
             rfsRunnable = new ReadFromServer(dataIn);
             wtsRunnable = new WriteToServer(dataOut);
             rfsRunnable.waitForStart();
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             System.out.println("IOException from connectToServer() method.");
         }
     }
@@ -171,13 +159,13 @@ public class GameFrame extends Canvas implements Runnable {
 
         public void run() {
             try {
-                while(true) {
+                while (true) {
                     if (GC.getP2() != null) {
                         GC.getP2().setX(dataIn.readDouble());
-                        GC.getP2().setY(dataIn.readDouble()); 
+                        GC.getP2().setY(dataIn.readDouble());
                     }
                 }
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 System.out.println("IOException from RFS run()");
             }
         }
@@ -190,7 +178,7 @@ public class GameFrame extends Canvas implements Runnable {
                 Thread writeThread = new Thread(wtsRunnable);
                 readThread.start();
                 writeThread.start();
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 System.out.println("IOException from waitForStartMsg()");
             }
         }
@@ -206,27 +194,28 @@ public class GameFrame extends Canvas implements Runnable {
 
         public void run() {
             try {
-                while(true) {
+                while (true) {
                     if (GC.getP1() != null) {
                         dataOut.writeDouble(GC.getP1().getX());
                         dataOut.writeDouble(GC.getP1().getY());
-                        dataOut.flush();    
+                        dataOut.flush();
                         try {
                             Thread.sleep(25);
-                        } catch(InterruptedException ex) {
+                        } catch (InterruptedException ex) {
                             System.out.println("InterruptedException from WTS run().");
                         }
                     }
                 }
-            } catch(IOException ex) {
-                    System.out.println("IOException from WTS run()");
-                }        
+            } catch (IOException ex) {
+                System.out.println("IOException from WTS run()");
+            }
         }
     }
 
     /** Starts a new {@code Thread} thread */
     public synchronized void start() {
-        if(running) return;
+        if (running)
+            return;
 
         running = true;
         thread = new Thread(this);
@@ -235,7 +224,7 @@ public class GameFrame extends Canvas implements Runnable {
 
     /**
      * Overrides the run method of Runnable. Also called the Gameloop that
-     * calls for updates per second [UPS] for non-animation updates and 
+     * calls for updates per second [UPS] for non-animation updates and
      * calls for different frames per second [FPS] for animation updates.
      */
     @Override
@@ -244,9 +233,9 @@ public class GameFrame extends Canvas implements Runnable {
         long current, lastUpdate = System.currentTimeMillis();
         nextTime = System.currentTimeMillis() + 1000;
 
-        while(running) {
+        while (running) {
             current = System.currentTimeMillis();
-            double lastRenderedTime = (current - lastUpdate)/1000d;
+            double lastRenderedTime = (current - lastUpdate) / 1000d;
             secs += lastRenderedTime;
             lastUpdate = current;
 
@@ -261,12 +250,12 @@ public class GameFrame extends Canvas implements Runnable {
 
     /** Calls for non-animation updates for every instance of GameObject */
     public void update() {
-        //GC.update();
+        GC.update();
         UPS++;
     }
-    
+
     /** Calls for animation updates for every instance of GameObject */
-    public  void draw() {
+    public void draw() {
         FPS++;
         BufferStrategy bs = this.getBufferStrategy();
         if (bs == null) {
@@ -275,16 +264,16 @@ public class GameFrame extends Canvas implements Runnable {
         }
 
         Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
-        g2d.setColor(new Color(0,0,0));
+        g2d.setColor(new Color(0, 0, 0));
         g2d.fillRect(0, 0, getWidth(), getHeight());
-        //GC.draw(g2d);
+        GC.draw(g2d);
         g2d.dispose();
         bs.show();
     }
 
     /** Gets the Statistics for the current UPS and FPS of the program */
     public void stats() {
-        if(System.currentTimeMillis() > nextTime) {
+        if (System.currentTimeMillis() > nextTime) {
             System.out.println(String.format("FPS: %d, UPS: %d", FPS, UPS));
             FPS = 0;
             UPS = 0;

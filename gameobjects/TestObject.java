@@ -37,7 +37,6 @@ public class TestObject extends GameObject {
         this.ySpeed = 5; // Move to The Right 5 pixels
 
 
-
         for (int i = 0; i < gameObject.size(); i++) {
             GameObject tempObject = gameObject.get(i);
             switch(tempObject.getID()) {

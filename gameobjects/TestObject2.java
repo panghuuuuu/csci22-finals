@@ -33,6 +33,8 @@ public class TestObject2 extends GameObject {
 
     @Override
     public void update(ArrayList<GameObject> gameObject) {
+        this.y += this.ySpeed;  
+        this.ySpeed = -5;
         
         for (int i = 0; i < gameObject.size(); i++) {
             GameObject tempObject = gameObject.get(i);

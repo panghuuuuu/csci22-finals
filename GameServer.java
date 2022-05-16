@@ -40,9 +40,9 @@ public class GameServer {
         System.out.println("=== Game Server ===");
         numPlayer = 0;
         maxPlayers = 2;
-        p1x = 10; 
-        p1y = 250; 
-        p2x =  300;
+        p1x = 10;
+        p1y = 250;
+        p2x = 300;
         p2y = 500;
         try {
             ss = new ServerSocket(45371);
@@ -58,7 +58,7 @@ public class GameServer {
                 Socket sock = ss.accept();
                 DataInputStream dataIn = new DataInputStream(sock.getInputStream());
                 DataOutputStream dataOut = new DataOutputStream(sock.getOutputStream());
-                
+
                 numPlayer++;
                 dataOut.writeInt(numPlayer);
                 System.out.println("Player #" + numPlayer + " has connected.");
@@ -130,7 +130,7 @@ public class GameServer {
 
         public void run() {
             try {
-                while(true) {
+                while (true) {
                     if (playerID == 1) {
                         dataOut.writeDouble(p2x);
                         dataOut.writeDouble(p2y);
@@ -154,7 +154,7 @@ public class GameServer {
         public void sendStartMsg() {
             try {
                 dataOut.writeUTF("We now have 2 players.");
-            } catch(IOException ex) {
+            } catch (IOException ex) {
                 System.out.println("IOException from sendStartMsg()");
             }
         }

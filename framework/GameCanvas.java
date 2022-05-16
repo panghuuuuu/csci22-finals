@@ -39,8 +39,8 @@ public class GameCanvas extends JComponent {
 
 
     public GameCanvas(int w, int h) {
-        /*addGameObject(new TestObject(50, 50, 50, 50, GameObjectID.Test));
-        addGameObject(new TestObject2(50, 1000, 100, 100, GameObjectID.Test2));*/
+        addGameObject(new TestObject(50, 50, 50, 50, GameObjectID.Test));
+        addGameObject(new TestObject2(50, 1000, 100, 100, GameObjectID.Test2));
         p = new ArrayList<Player>();
         width = w;
         height = h;
@@ -49,14 +49,14 @@ public class GameCanvas extends JComponent {
     
     public void newPlayer(int n) {
         if (n == 1) {
-            p1 = new Player(50, 50, 50, 50, GameObjectID.Test); 
-            p2 = new Player(50, 1000, 100, 100, GameObjectID.Test2);
+            p1 = new Player(10, 250); 
+            p2 = new Player(300, 500);
         } else if (n == 2) {
-            p1 = new Player(50, 1000, 100, 100, GameObjectID.Test2); 
-            p2 = new Player(50, 50, 50, 50, GameObjectID.Test);
+            p1 = new Player(300, 500); 
+            p2 = new Player(10, 250);
         }
-        addGameObject(p1);
-        addGameObject(p2);
+        p.add(p1);
+        p.add(p2);
     }
 
     /** Iterates through every gameObject and calls its update method */
@@ -68,14 +68,16 @@ public class GameCanvas extends JComponent {
     }
 
     /** Iterates through every gameObject and calls its draw method */
-    protected void paintComponent(Graphics2D g2d) {
+    public void draw(Graphics2D g2d) {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setColor(new Color(0,0,0));
-        g2d.fillRect(0, 0, width, height);
         g2d.setRenderingHints(rh);
-        for (int i = 0; i < gameObject.size(); i++) {
+        /*for (int i = 0; i < gameObject.size(); i++) {
             temp = gameObject.get(i);
             temp.draw(g2d);
+        }*/
+
+        for (Player n: p) {
+            n.draw(g2d);
         }
     }
 
