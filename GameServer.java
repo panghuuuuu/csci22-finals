@@ -104,6 +104,7 @@ public class GameServer {
             try {
                 while (true) {
                     if (playerID == 1) {
+                        System.out.printf("P1x: %f P1y: %f %n", p1x, p1y);
                         p1x = dataIn.readDouble();
                         p1y = dataIn.readDouble();
                     } else {
@@ -130,6 +131,7 @@ public class GameServer {
         public void run() {
             try {
                 while (true) {
+                    System.out.printf("P2x: %f P2y: %f %n", p2x, p2y);
                     if (playerID == 1) {
                         dataOut.writeDouble(p2x);
                         dataOut.writeDouble(p2y);

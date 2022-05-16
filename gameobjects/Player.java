@@ -1,107 +1,34 @@
-/**
-    A TestObject class to test the GameObject interface.
-    @author Angelo Joaquin B. Alvarez (210295)
-    @author Ysabella B. Panghulan (214521)
-    @version May 14, 2022
-**/
-/*
-    I have not discussed the Java language code in my program 
-    with anyone other than my instructor or the teaching assistants 
-    assigned to this course.
-
-    I have not used Java language code obtained from another student, 
-    or any other unauthorized source, either modified or unmodified.
-
-    If any Java language code or documentation used in my program 
-    was obtained from another source, such as a textbook or website, 
-    that has been clearly noted with a proper citation in the comments 
-    of my program.
-*/
-
 package gameobjects;
 
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
 
-public class Player {
-    double x;
-    double y;
-    int width;
-    int height;
-    double horizontalSpeed;
-    double verticalSpeed;
-    private ImageIcon image;
+import framework.*;
 
-    public Player(double x, double y) {
-        this.x = x;
-        this.y = y;
-        //image = new ImageIcon(getClass().getResource("/sprites/samplesprite1.png"));
+public class Player extends GameObject {
+    private KeyListener playerControl;
+
+    public Player(double xPos, double yPos, double w, double h, GameObjectID objectID) {
+        super(xPos, yPos, w, h, objectID);
+        playerControl = new KeyListener();
     }
 
+    @Override
+    public void update(ArrayList<GameObject> gameObject) {
+        x += xSpeed;
+        y += ySpeed;
+
+        if (playerControl.down) ySpeed = 1;
+        if (playerControl.left) xSpeed = -1;
+        if (playerControl.right) xSpeed = 1;
+        if (playerControl.up) ySpeed = -1;
+    }
+
+    @Override
     public void draw(Graphics2D g2d) {
-        Rectangle2D.Double s = new Rectangle2D.Double(x,y, 50, 50);
-        g2d.setColor(Color.RED);
-        g2d.fill(s);
+        g2d.setColor(new Color(255,0,0));
+        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle    
     }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public double getHeight() {
-        return height;
-    }
-
-    public double getHorizontalSpeed() {
-        return horizontalSpeed;
-    }
-
-    public double getVerticalSpeed() {
-        return verticalSpeed;
-    }
-
-    public void reverseHorizontal() {
-        horizontalSpeed *= -1;
-    }
-
-    public void reverseVertical() {
-        verticalSpeed *= -1;
-    }
-
-    public void changeDirection() {
-        reverseHorizontal();
-        reverseVertical();
-    }
-
-    public void moveX(double n) {
-        x += n;
-    }
-
-    public void moveY(double n) {
-        y += n;
-    }
-
-    public void setX(double n) {
-        x = n;
-    }
-
-    public void setY(double n) {
-        y = n;
-    }
-   
-    public Boolean isColliding(Player r) {
-        return !(this.x + this.width <= r.getX() ||
-                this.x >= r.getX() + r.getWidth() ||
-                this.y + this.height <= r.getY() ||
-                this.y >= r.getY() + r.getHeight());
-    }
+    
 }

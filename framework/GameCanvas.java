@@ -30,34 +30,34 @@ import gameobjects.*;
 public class GameCanvas extends JComponent {
     //Declaration of Variables
     public ArrayList<GameObject> gameObject = new ArrayList<GameObject>();
-    public ArrayList<Player> p;
+    //public ArrayList<Players> p;
     private GameObject temp;
-    private Player p1;
-    private Player p2;
+    /*private Players p1;
+    private Players p2;
     private int width;
-    private int height;
+    private int height;*/
 
 
     public GameCanvas(int w, int h) {
-        addGameObject(new TestObject(50, 50, 50, 50, GameObjectID.Test));
-        addGameObject(new TestObject2(50, 1000, 100, 100, GameObjectID.Test2));
-        p = new ArrayList<Player>();
+        addGameObject(new Player(50, 50, 50, 50, GameObjectID.PlayerOne));
+        addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerTwo));
+        /*p = new ArrayList<Players>();
         width = w;
         height = h;
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(width, height));*/
     }
     
-    public void newPlayer(int n) {
+    /* public void newPlayer(int n) {
         if (n == 1) {
-            p1 = new Player(10, 250); 
-            p2 = new Player(300, 500);
+            p1 = new Players(10, 250); 
+            p2 = new Players(300, 500);
         } else if (n == 2) {
-            p1 = new Player(300, 500); 
-            p2 = new Player(10, 250);
+            p1 = new Players(300, 500); 
+            p2 = new Players(10, 250);
         }
         p.add(p1);
         p.add(p2);
-    }
+    } */
 
     /** Iterates through every gameObject and calls its update method */
     public void update() {
@@ -71,13 +71,12 @@ public class GameCanvas extends JComponent {
     public void draw(Graphics2D g2d) {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
-        /*for (int i = 0; i < gameObject.size(); i++) {
+        for (int i = 0; i < gameObject.size(); i++) {
             temp = gameObject.get(i);
             temp.draw(g2d);
-        }*/
 
-        for (Player n: p) {
-            n.draw(g2d);
+        /*for (Players n: p) {
+            n.draw(g2d); }*/
         }
     }
 
@@ -88,11 +87,23 @@ public class GameCanvas extends JComponent {
         this.gameObject.remove(object);
     }
 
-    public Player getP1() {
-        return p1;
+    public GameObject getP1() {
+        for (int i = 0; i < gameObject.size(); i++) {
+            temp = gameObject.get(i);
+            if (temp.getID() == GameObjectID.PlayerOne) {
+                return temp;
+            }
+        }
+        return null;
      }
  
-    public Player getP2() {
-         return p2;
+    public GameObject getP2() {
+        for (int i = 0; i < gameObject.size(); i++) {
+            temp = gameObject.get(i);
+            if (temp.getID() == GameObjectID.PlayerTwo) {
+                return temp;
+            }
+        }
+        return null;
     }
 }

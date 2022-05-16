@@ -26,7 +26,7 @@ package framework;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.awt.event.*;
+//import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -43,8 +43,8 @@ public class GameFrame extends Canvas implements Runnable {
     private boolean running;
     private Thread thread;
     private GameCanvas GC;
-    private Timer timer;
-    private boolean up, down, left, right, push;
+    //private Timer timer;
+    //private boolean up, down, left, right, push;
     private Socket socket;
     private ReadFromServer rfsRunnable;
     private WriteToServer wtsRunnable;
@@ -54,7 +54,7 @@ public class GameFrame extends Canvas implements Runnable {
     public GameFrame() {
         gameFrame = new JFrame();
         GC = new GameCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
-        up = down = left = right = push = false;
+        //up = down = left = right = push = false;
     }
 
     /** Setups the Frame by adding JComponents and Listeners */
@@ -66,12 +66,12 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.setVisible(true);
         gameFrame.add(this);
         gameFrame.pack();
-        GC.newPlayer(playerID);
-        setUpAnimationTimer();
-        setUpKeyListener();
+        gameFrame.setFocusable(true);
+        //GC.newPlayer(playerID);
+        //setUpAnimationTimer();
     }
 
-    public void setUpAnimationTimer() {
+    /*public void setUpAnimationTimer() {
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 double speed = 5;
@@ -91,45 +91,80 @@ public class GameFrame extends Canvas implements Runnable {
         };
         timer = new Timer(10, al);
         timer.start();
+    }*/
+
+    /** Starts a new {@code Thread} thread */
+    public synchronized void start() {
+        if (running)
+            return;
+
+        running = true;
+        thread = new Thread(this);
+        thread.start();
     }
 
-    public void setUpKeyListener() {
-        KeyListener kl = new KeyListener() {
-            public void keyTyped(KeyEvent ke) {
+    /**
+     * Overrides the run method of Runnable. Also called the Gameloop that
+     * calls for updates per second [UPS] for non-animation updates and
+     * calls for different frames per second [FPS] for animation updates.
+     */
+    @Override
+    public void run() {
+        double secs = 0;
+        long current, lastUpdate = System.currentTimeMillis();
+        nextTime = System.currentTimeMillis() + 1000;
 
-            }
+        while (running) {
+            current = System.currentTimeMillis();
+            double lastRenderedTime = (current - lastUpdate) / 1000d;
+            secs += lastRenderedTime;
+            lastUpdate = current;
 
-            public void keyPressed(KeyEvent ke) {
-                int keyCode = ke.getKeyCode();
-                if (keyCode == KeyEvent.VK_UP)
-                    up = true;
-                if (keyCode == KeyEvent.VK_DOWN)
-                    down = true;
-                if (keyCode == KeyEvent.VK_LEFT)
-                    left = true;
-                if (keyCode == KeyEvent.VK_RIGHT)
-                    right = true;
-                if (keyCode == KeyEvent.VK_SPACE)
-                    push = true;
+            while (secs > UPDATE_RATE) {
+                update();
+                secs -= UPDATE_RATE;
             }
-
-            public void keyReleased(KeyEvent ke) {
-                int keyCode = ke.getKeyCode();
-                if (keyCode == KeyEvent.VK_UP)
-                    up = false;
-                if (keyCode == KeyEvent.VK_DOWN)
-                    down = false;
-                if (keyCode == KeyEvent.VK_LEFT)
-                    left = false;
-                if (keyCode == KeyEvent.VK_RIGHT)
-                    right = false;
-                if (keyCode == KeyEvent.VK_SPACE)
-                    push = false;
-            }
-        };
-        gameFrame.addKeyListener(kl);
-        gameFrame.setFocusable(true);
+            draw();
+            stats();
+        }
     }
+
+    /** Calls for non-animation updates for every instance of GameObject */
+    public void update() {
+        GC.update();
+        UPS++;
+    }
+
+    /** Calls for animation updates for every instance of GameObject */
+    public void draw() {
+        FPS++;
+        BufferStrategy bs = this.getBufferStrategy();
+        if (bs == null) {
+            this.createBufferStrategy(2);
+            return;
+        }
+
+        Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
+        g2d.setColor(new Color(0, 0, 0));
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+        GC.draw(g2d);
+        g2d.dispose();
+        bs.show();
+    }
+
+    /** Gets the Statistics for the current UPS and FPS of the program */
+    public void stats() {
+        if (System.currentTimeMillis() > nextTime) {
+            System.out.println(String.format("FPS: %d, UPS: %d", FPS, UPS));
+            FPS = 0;
+            UPS = 0;
+            nextTime = System.currentTimeMillis() + 1000;
+        }
+    }
+
+    //////////////////
+    //SERVER METHODS//
+    //////////////////
 
     public void connectToServer() {
         try {
@@ -137,9 +172,9 @@ public class GameFrame extends Canvas implements Runnable {
             DataInputStream dataIn = new DataInputStream(socket.getInputStream());
             DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream());
             playerID = dataIn.readInt();
-            System.out.println("You are Player# " + playerID);
+            System.out.println("You are Player #" + playerID);
             if (playerID == 1) {
-                System.out.println("Waiting for player 2...");
+                System.out.println("Waiting for Player 2...");
             }
             rfsRunnable = new ReadFromServer(dataIn);
             wtsRunnable = new WriteToServer(dataOut);
@@ -212,72 +247,4 @@ public class GameFrame extends Canvas implements Runnable {
         }
     }
 
-    /** Starts a new {@code Thread} thread */
-    public synchronized void start() {
-        if (running)
-            return;
-
-        running = true;
-        thread = new Thread(this);
-        thread.start();
-    }
-
-    /**
-     * Overrides the run method of Runnable. Also called the Gameloop that
-     * calls for updates per second [UPS] for non-animation updates and
-     * calls for different frames per second [FPS] for animation updates.
-     */
-    @Override
-    public void run() {
-        double secs = 0;
-        long current, lastUpdate = System.currentTimeMillis();
-        nextTime = System.currentTimeMillis() + 1000;
-
-        while (running) {
-            current = System.currentTimeMillis();
-            double lastRenderedTime = (current - lastUpdate) / 1000d;
-            secs += lastRenderedTime;
-            lastUpdate = current;
-
-            while (secs > UPDATE_RATE) {
-                update();
-                secs -= UPDATE_RATE;
-            }
-            draw();
-            stats();
-        }
-    }
-
-    /** Calls for non-animation updates for every instance of GameObject */
-    public void update() {
-        GC.update();
-        UPS++;
-    }
-
-    /** Calls for animation updates for every instance of GameObject */
-    public void draw() {
-        FPS++;
-        BufferStrategy bs = this.getBufferStrategy();
-        if (bs == null) {
-            this.createBufferStrategy(2);
-            return;
-        }
-
-        Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
-        g2d.setColor(new Color(0, 0, 0));
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-        GC.draw(g2d);
-        g2d.dispose();
-        bs.show();
-    }
-
-    /** Gets the Statistics for the current UPS and FPS of the program */
-    public void stats() {
-        if (System.currentTimeMillis() > nextTime) {
-            System.out.println(String.format("FPS: %d, UPS: %d", FPS, UPS));
-            FPS = 0;
-            UPS = 0;
-            nextTime = System.currentTimeMillis() + 1000;
-        }
-    }
 }
