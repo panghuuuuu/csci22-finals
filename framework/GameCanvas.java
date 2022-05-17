@@ -30,21 +30,10 @@ import gameobjects.*;
 public class GameCanvas extends JComponent {
     //Declaration of Variables
     public ArrayList<GameObject> gameObject = new ArrayList<GameObject>();
-    //public ArrayList<Players> p;
     private GameObject temp;
-    /*private Players p1;
-    private Players p2;
-    private int width;
-    private int height;*/
-
 
     public GameCanvas(int w, int h) {
-        //addGameObject(new Player(50, 50, 50, 50, GameObjectID.PlayerOne));
-        //addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerTwo));
-        /*p = new ArrayList<Players>();
-        width = w;
-        height = h;
-        setPreferredSize(new Dimension(width, height));*/
+        
     }
     
     public void newPlayer(int n) {
@@ -69,12 +58,31 @@ public class GameCanvas extends JComponent {
     public void draw(Graphics2D g2d) {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
-        for (int i = 0; i < gameObject.size(); i++) {
-            temp = gameObject.get(i);
-            temp.draw(g2d);
+        if (MouseEventListener.mode == 0) {
+            g2d.setColor(new Color(255,0,0));
+            g2d.fillRect(450, 390, 250, 150); 
+        } else if (MouseEventListener.mode == 1) {
+            g2d.setColor(new Color(0,255,0));
+            g2d.fillRect(100, 195, 250, 250); 
+            g2d.setColor(new Color(255,0,0));
+            g2d.fillRect(450, 195, 250, 250); 
+            g2d.setColor(new Color(0,0,255));
+            g2d.fillRect(775, 195, 250, 250); 
+        }     
+        
+        if (MouseEventListener.mode == 2) {
+            for (int i = 0; i < gameObject.size(); i++) {
+                temp = gameObject.get(i);
+                temp.draw(g2d);
+            }
+        }
 
-        /*for (Players n: p) {
-            n.draw(g2d); }*/
+        if (MouseEventListener.landscape == 1) {
+            System.out.println("First Map");
+        } else if (MouseEventListener.landscape == 2) {
+            System.out.println("Second Map");
+        } else if (MouseEventListener.landscape == 3) {
+            System.out.println("Third Map");
         }
     }
 
