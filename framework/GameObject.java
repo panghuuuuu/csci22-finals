@@ -61,7 +61,6 @@ public abstract class GameObject {
         this.y += speed;
     }
 
-
     
     //Accessor Methods
     public double getX() {

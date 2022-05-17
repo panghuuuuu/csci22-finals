@@ -31,6 +31,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.*;
+import gameobjects.*;
 
 public class GameFrame extends Canvas implements Runnable {
 
@@ -205,6 +206,8 @@ public class GameFrame extends Canvas implements Runnable {
                         GC.getP2().setY(dataIn.readDouble());
                         GC.getP2().setXSpeed(dataIn.readDouble());
                         GC.getP2().setYSpeed(dataIn.readDouble());
+                        ((Player) GC.getP2()).setPush(dataIn.readBoolean());
+                        ((Player) GC.getP2()).setDir(dataIn.readUTF());
                     }
                 }
             } catch (IOException ex) {
@@ -245,6 +248,8 @@ public class GameFrame extends Canvas implements Runnable {
                         dataOut.writeDouble(GC.getP1().getY());
                         dataOut.writeDouble(GC.getP1().getXSpeed());
                         dataOut.writeDouble(GC.getP1().getYSpeed());
+                        dataOut.writeBoolean(((Player) GC.getP1()).getPush());
+                        dataOut.writeUTF(((Player) GC.getP1()).getDir());
                         dataOut.flush();
                         try {
                             Thread.sleep(25);
