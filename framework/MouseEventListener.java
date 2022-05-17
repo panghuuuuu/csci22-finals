@@ -14,33 +14,33 @@ public class MouseEventListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (450 <= e.getX() && e.getX() <= 700 && 390 <= e.getY() && e.getY() <= 540) {
-            mode = 1;
+        if (mode == 0) {
+            if (450 <= e.getX() && e.getX() <= 700 && 390 <= e.getY() && e.getY() <= 540) {
+                mode = 1;
+            }    
         } 
-        if (mode == 1) {
-            if (100 <= e.getX() && e.getX() <= 350 && 195 <= e.getY() && e.getY() <= 445 ||
-            450 <= e.getX() && e.getX() <= 700 && 195 <= e.getY() && e.getY() <= 445 ||
-            775 <= e.getX() && e.getX() <= 1025 && 195 <= e.getY() && e.getY() <= 445) {
-                mode = 2;
-                if (100 <= e.getX() && e.getX() <= 350 && 195 <= e.getY() && e.getY() <= 445) {
-                    landscape = 1;
-                } else if (450 <= e.getX() && e.getX() <= 700 && 195 <= e.getY() && e.getY() <= 445) {
-                    landscape = 2;
-                } else if (775 <= e.getX() && e.getX() <= 1025 && 195 <= e.getY() && e.getY() <= 445) {
-                    landscape = 3;
-                }
+        
+        if (mode == 2) {
+            if (100 <= e.getX() && e.getX() <= 350 && 195 <= e.getY() && e.getY() <= 445) {
+                landscape = 1; 
+                mode = 3;
+            } else if (450 <= e.getX() && e.getX() <= 700 && 195 <= e.getY() && e.getY() <= 445) {
+                landscape = 2;
+                mode = 3;
+            } else if (775 <= e.getX() && e.getX() <= 1025 && 195 <= e.getY() && e.getY() <= 445) {
+                landscape = 3;
+                mode = 3;
             }
         }
     }
 
     public void mousePressed(MouseEvent e) {
         // TODO Auto-generated method stub
-        
-    }
 
+    }
 
     public void mouseReleased(MouseEvent e) {
         // TODO Auto-generated method stub
-        
+
     }
 }

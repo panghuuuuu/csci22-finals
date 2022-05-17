@@ -127,6 +127,7 @@ public class GameFrame extends Canvas implements Runnable {
         g2d.fillRect(0, 0, getWidth(), getHeight());
         GC.draw(g2d);
         g2d.dispose();
+        System.out.println(displayFinalScore());
         bs.show();
     }
 
@@ -138,6 +139,10 @@ public class GameFrame extends Canvas implements Runnable {
             UPS = 0;
             nextTime = System.currentTimeMillis() + 1000;
         }
+    }
+
+    public String displayFinalScore() {
+        return GC.returnScore();
     }
 
     //////////////////
