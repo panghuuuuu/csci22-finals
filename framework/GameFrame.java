@@ -44,8 +44,6 @@ public class GameFrame extends Canvas implements Runnable {
     private boolean running;
     private Thread thread;
     private GameCanvas GC;
-    //private Timer timer;
-    //private boolean up, down, left, right, push;
     private Socket socket;
     private ReadFromServer rfsRunnable;
     private WriteToServer wtsRunnable;
@@ -56,7 +54,6 @@ public class GameFrame extends Canvas implements Runnable {
     public GameFrame() {
         gameFrame = new JFrame();
         GC = new GameCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
-        //up = down = left = right = push = false;
     }
 
     /** Setups the Frame by adding JComponents and Listeners */
@@ -67,35 +64,13 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.setTitle("Player " + playerID);
         gameFrame.setVisible(true);
         this.addKeyListener(new KeyListener(GC));
+        this.addMouseListener(new MouseEventListener(GC));
         gameFrame.add(this);
         gameFrame.pack();
         gameFrame.setFocusable(true);
         GC.newPlayer(playerID);
-        //setUpAnimationTimer();
     }
-
-    /*public void setUpAnimationTimer() {
-        ActionListener al = new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                double speed = 5;
-                if (up)
-                    GC.getP1().moveY(-speed);
-                if (down)
-                    GC.getP1().moveY(speed);
-                if (left)
-                    GC.getP1().moveX(-speed);
-                if (right)
-                    GC.getP1().moveX(speed);
-                if (push && GC.getP1().isColliding(GC.getP2())) {
-                    GC.getP2().moveX(-speed); // mali pa to di gumagana
-                }
-                GC.repaint();
-            }
-        };
-        timer = new Timer(10, al);
-        timer.start();
-    }*/
-
+    
     /** Starts a new {@code Thread} thread */
     public synchronized void start() {
         if (running)
