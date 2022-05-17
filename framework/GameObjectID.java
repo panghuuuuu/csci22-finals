@@ -25,3 +25,4 @@ package framework;
 public enum GameObjectID {
     PlayerOne(), PlayerTwo(), Test(), Test2(), LandscapeOne(), LandscapeTwo(), LandscapeThree();
 }
+

@@ -31,6 +31,7 @@ public class GameServer {
     private double[] p1props, p2props;
     private boolean p1push, p2push;
     private String p1dir, p2dir;
+    private int p1menu, p2menu;
 
     private Socket p1Socket;
     private Socket p2Socket;
@@ -49,6 +50,7 @@ public class GameServer {
         p2props = new double[] {200, 200, 0, 0};
         p1push = p2push = false;
         p1dir = p2dir = "Right";
+        p1menu = p2menu = 0;
         try {
             ss = new ServerSocket(45371);
         } catch (IOException ex) {
@@ -112,12 +114,14 @@ public class GameServer {
                         for (int i = 0; i < p1props.length; i++) p1props[i] = dataIn.readDouble();
                         p1push = dataIn.readBoolean();
                         p1dir = dataIn.readUTF();
+                        p1menu = dataIn.readInt();
                         //p1x = dataIn.readDouble();
                         //p1y = dataIn.readDouble();
                     } else {
                         for (int i = 0; i < p2props.length; i++) p2props[i] = dataIn.readDouble();
                         p2push = dataIn.readBoolean();
                         p2dir = dataIn.readUTF();
+                        p2menu = dataIn.readInt();
                         //p2x = dataIn.readDouble();
                         //p2y = dataIn.readDouble();
                     }
@@ -145,6 +149,7 @@ public class GameServer {
                         for (int i = 0; i < p2props.length; i++) dataOut.writeDouble(p2props[i]);
                         dataOut.writeBoolean(p2push);
                         dataOut.writeUTF(p2dir);
+                        dataOut.writeInt(p2menu);
                         //dataOut.writeDouble(p2x);
                         //dataOut.writeDouble(p2y);
                         dataOut.flush();
@@ -152,6 +157,7 @@ public class GameServer {
                         for (int i = 0; i < p1props.length; i++) dataOut.writeDouble(p1props[i]);
                         dataOut.writeBoolean(p1push);
                         dataOut.writeUTF(p1dir);
+                        dataOut.writeInt(p1menu);
                         //dataOut.writeDouble(p1x);
                         //dataOut.writeDouble(p1y);
                         dataOut.flush();

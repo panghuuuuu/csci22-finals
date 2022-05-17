@@ -32,6 +32,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.*;
 import gameobjects.*;
+import menusystem.MenuSys;
 
 public class GameFrame extends Canvas implements Runnable {
 
@@ -44,16 +45,19 @@ public class GameFrame extends Canvas implements Runnable {
     private boolean running;
     private Thread thread;
     private GameCanvas GC;
+    private MenuSys menu;
     private Socket socket;
     private ReadFromServer rfsRunnable;
     private WriteToServer wtsRunnable;
     private int playerID;
+    private GameState state;
     private double[] PlayerPositions;
 
     // Constructor method for GameFrame class
     public GameFrame() {
         gameFrame = new JFrame();
         GC = new GameCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
+        menu = new MenuSys(SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     /** Setups the Frame by adding JComponents and Listeners */
@@ -69,6 +73,7 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.pack();
         gameFrame.setFocusable(true);
         GC.newPlayer(playerID);
+        if (playerID == 1) state = GameState.P1Menu; else state = GameState.P2Menu;
     }
     
     /** Starts a new {@code Thread} thread */
@@ -109,7 +114,9 @@ public class GameFrame extends Canvas implements Runnable {
 
     /** Calls for non-animation updates for every instance of GameObject */
     public void update() {
-        GC.update();
+        if (state == GameState.Game) GC.update();
+        if (state == GameState.P1Menu) menu.update();
+        if (state == GameState.P2Menu) menu.update();
         UPS++;
     }
 
@@ -125,9 +132,11 @@ public class GameFrame extends Canvas implements Runnable {
         Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
         g2d.setColor(new Color(0, 0, 0));
         g2d.fillRect(0, 0, getWidth(), getHeight());
-        GC.draw(g2d);
+        if (state == GameState.Game) GC.draw(g2d);
+        if (state == GameState.P1Menu) menu.draw(g2d);
+        if (state == GameState.P2Menu) menu.draw(g2d);
         g2d.dispose();
-        System.out.println(displayFinalScore());
+        //System.out.println(displayFinalScore());
         bs.show();
     }
 
@@ -188,6 +197,7 @@ public class GameFrame extends Canvas implements Runnable {
                         GC.getP2().setYSpeed(dataIn.readDouble());
                         ((Player) GC.getP2()).setPush(dataIn.readBoolean());
                         ((Player) GC.getP2()).setDir(dataIn.readUTF());
+                        if (state == GameState.P2Menu) menu.setP2MenuMode(dataIn.readInt());
                     }
                 }
             } catch (IOException ex) {
@@ -230,6 +240,7 @@ public class GameFrame extends Canvas implements Runnable {
                         dataOut.writeDouble(GC.getP1().getYSpeed());
                         dataOut.writeBoolean(((Player) GC.getP1()).getPush());
                         dataOut.writeUTF(((Player) GC.getP1()).getDir());
+                        if (state == GameState.P1Menu) dataOut.writeInt(menu.getP1MenuMode());
                         dataOut.flush();
                         try {
                             Thread.sleep(25);

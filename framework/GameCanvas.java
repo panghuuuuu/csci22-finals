@@ -34,6 +34,8 @@ public class GameCanvas extends JComponent {
     private double scoreP1 = 0;
     private double scoreP2 = 0;
     private int playerID;
+    private int menuMode1, menuMode2;
+
     public GameCanvas(int w, int h) {
 
     }
@@ -62,7 +64,7 @@ public class GameCanvas extends JComponent {
     public void draw(Graphics2D g2d) {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
-        if (MouseEventListener.mode == 0) {
+        /*if (MouseEventListener.mode == 0) {
             g2d.setColor(new Color(255, 0, 0));
             g2d.fillRect(450, 390, 250, 150);
         } else if (MouseEventListener.mode == 1) {
@@ -111,13 +113,13 @@ public class GameCanvas extends JComponent {
                         scoreP1 += 0.001;
                     }
                 }
-            }
+            }*/
+
             for (int i = 0; i < gameObject.size(); i++) {
                 temp = gameObject.get(i);
                 temp.draw(g2d);
             }
         }
-    }
 
     public String returnScore() {
         return ("P1: " + (int) scoreP1 + "||" + " P2:" + (int) scoreP2);
@@ -150,4 +152,5 @@ public class GameCanvas extends JComponent {
         }
         return null;
     }
+
 }

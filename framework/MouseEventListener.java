@@ -2,8 +2,11 @@ package framework;
 
 import java.awt.event.*;
 
+import menusystem.*;
+
 public class MouseEventListener extends MouseAdapter {
     private GameCanvas gCanvas;
+    private MenuSys mSystem;
     public static int mode = 0;
     public static int landscape = 0;
 
@@ -11,6 +14,12 @@ public class MouseEventListener extends MouseAdapter {
         gCanvas = gc;
         gc.setFocusable(true);
     }
+
+    public MouseEventListener(MenuSys ms) {
+        mSystem = ms;
+        ms.setFocusable(true);
+    }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
