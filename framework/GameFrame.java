@@ -50,7 +50,7 @@ public class GameFrame extends Canvas implements Runnable {
     private ReadFromServer rfsRunnable;
     private WriteToServer wtsRunnable;
     private int playerID;
-    private GameState state;
+    private static GameState state;
     private double[] PlayerPositions;
 
     // Constructor method for GameFrame class
@@ -148,6 +148,13 @@ public class GameFrame extends Canvas implements Runnable {
             UPS = 0;
             nextTime = System.currentTimeMillis() + 1000;
         }
+    }
+
+    public static GameState getStateID() {
+        return state;
+    }
+    public static void setStateID(GameState id) {
+        state = id;
     }
 
     public String displayFinalScore() {

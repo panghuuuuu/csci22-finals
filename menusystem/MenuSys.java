@@ -49,13 +49,15 @@ public class MenuSys extends JComponent{
         g2d.setRenderingHints(rh);
         if (MouseEventListener.mode == 0) {
             menuMode1 = 0;
-            if(menuMode2 > 0){
-                System.out.println("OTHER PLAYER PROCEEDED");
-            }
             g2d.setColor(new Color(255, 0, 0));
             g2d.fillRect(450, 390, 250, 150);
-        } else if (MouseEventListener.mode == 1) {
+        } else if (MouseEventListener.mode == 1 && GameFrame.getStateID() == GameState.P2Menu) {
             menuMode1 = 1;
+            System.out.println("WAITING FOR OTHER PLAYER TO START");
+            if (menuMode2 == 3) {
+                System.out.println("OTHER PLAYER STARTING");
+            }
+        } else {
             MouseEventListener.mode = 2;
         }
         if (MouseEventListener.mode == 2) {
