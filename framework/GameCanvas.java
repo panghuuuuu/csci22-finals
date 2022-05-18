@@ -34,17 +34,18 @@ public class GameCanvas extends JComponent {
     private double scoreP1 = 0;
     private double scoreP2 = 0;
     private int playerID;
+
     public GameCanvas(int w, int h) {
 
     }
 
     public void newPlayer(int n) {
         if (n == 1) {
-            addGameObject(new Player(50, 50, 50, 50, GameObjectID.PlayerOne));
+            addGameObject(new Player(250, 250, 50, 50, GameObjectID.PlayerOne));
             addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerTwo));
             playerID = n;
         } else if (n == 2) {
-            addGameObject(new Player(50, 50, 50, 50, GameObjectID.PlayerTwo));
+            addGameObject(new Player(250, 250, 50, 50, GameObjectID.PlayerTwo));
             addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerOne));
         }
         playerID = n;
@@ -62,11 +63,32 @@ public class GameCanvas extends JComponent {
     public void draw(Graphics2D g2d) {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
-            for (int i = 0; i < gameObject.size(); i++) {
-                temp = gameObject.get(i);
-                temp.draw(g2d);
-            }
+        for (int i = 0; i < gameObject.size(); i++) {
+            temp = gameObject.get(i);
+            temp.draw(g2d);
         }
+        Wall w = new Wall(171, 79, 815, 471, GameObjectID.Wall);
+        if (w.isOut(getP1())) {
+            if (playerID == 1) {
+                scoreP2++;
+            } else {
+                scoreP1++;
+            }
+            respawnP1();
+        }
+        if (w.isOut(getP2())) {
+            if (playerID == 1) {
+                scoreP1++;
+            } else {
+                scoreP2++;
+            }
+            respawnP2();
+        }
+        w.draw(g2d);
+        g2d.setFont(new Font("Karla", Font.BOLD | Font.ITALIC, 25));
+        g2d.setPaint(Color.YELLOW);
+        g2d.drawString("P1: " + (int) scoreP1 + "||" + " P2:" + (int) scoreP2, 118, 55);
+    }
 
     public void addGameObject(GameObject object) {
         this.gameObject.add(object);
@@ -94,5 +116,15 @@ public class GameCanvas extends JComponent {
             }
         }
         return null;
+    }
+
+    public void respawnP1() {
+        getP1().setX(500);
+        getP1().setY(350);
+    }
+
+    public void respawnP2() {
+        getP2().setX(500);
+        getP2().setY(350);
     }
 }

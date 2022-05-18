@@ -112,14 +112,10 @@ public class GameServer {
                         for (int i = 0; i < p1props.length; i++) p1props[i] = dataIn.readDouble();
                         p1push = dataIn.readBoolean();
                         p1dir = dataIn.readUTF();
-                        //p1x = dataIn.readDouble();
-                        //p1y = dataIn.readDouble();
                     } else {
                         for (int i = 0; i < p2props.length; i++) p2props[i] = dataIn.readDouble();
                         p2push = dataIn.readBoolean();
                         p2dir = dataIn.readUTF();
-                        //p2x = dataIn.readDouble();
-                        //p2y = dataIn.readDouble();
                     }
                 }
             } catch (IOException ex) {

@@ -26,12 +26,12 @@ package framework;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
-//import java.awt.event.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.*;
 import gameobjects.*;
+import javax.imageio.ImageIO;
 
 public class GameFrame extends Canvas implements Runnable {
 
@@ -69,7 +69,7 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.setFocusable(true);
         GC.newPlayer(playerID);
     }
-    
+
     /** Starts a new {@code Thread} thread */
     public synchronized void start() {
         if (running)
@@ -120,10 +120,15 @@ public class GameFrame extends Canvas implements Runnable {
             this.createBufferStrategy(2);
             return;
         }
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream("/landscape/sample.png"));
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
-        g2d.setColor(new Color(0, 0, 0));
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.drawImage(image, (int) 0, (int) 0, getWidth(), getHeight(), null);
         GC.draw(g2d);
         g2d.dispose();
         bs.show();
@@ -140,7 +145,7 @@ public class GameFrame extends Canvas implements Runnable {
     }
 
     //////////////////
-    //SERVER METHODS//
+    // SERVER METHODS//
     //////////////////
 
     public void connectToServer() {
