@@ -34,6 +34,8 @@ public class GameServer {
 
     private Socket p1Socket;
     private Socket p2Socket;
+    private Boolean waitP1 = true;
+    private Boolean waitP2 = true;
     private ReadFromClient p1ReadRunnable;
     private ReadFromClient p2ReadRunnable;
     private WriteToClient p1WriteRunnable;
@@ -112,10 +114,12 @@ public class GameServer {
                         for (int i = 0; i < p1props.length; i++) p1props[i] = dataIn.readDouble();
                         p1push = dataIn.readBoolean();
                         p1dir = dataIn.readUTF();
+                        waitP2 = dataIn.readBoolean();
                     } else {
                         for (int i = 0; i < p2props.length; i++) p2props[i] = dataIn.readDouble();
                         p2push = dataIn.readBoolean();
                         p2dir = dataIn.readUTF();
+                        waitP1 = dataIn.readBoolean();
                     }
                 }
             } catch (IOException ex) {
@@ -141,6 +145,7 @@ public class GameServer {
                         for (int i = 0; i < p2props.length; i++) dataOut.writeDouble(p2props[i]);
                         dataOut.writeBoolean(p2push);
                         dataOut.writeUTF(p2dir);
+                        dataOut.writeBoolean(waitP1);
                         //dataOut.writeDouble(p2x);
                         //dataOut.writeDouble(p2y);
                         dataOut.flush();
@@ -148,6 +153,7 @@ public class GameServer {
                         for (int i = 0; i < p1props.length; i++) dataOut.writeDouble(p1props[i]);
                         dataOut.writeBoolean(p1push);
                         dataOut.writeUTF(p1dir);
+                        dataOut.writeBoolean(waitP2);
                         //dataOut.writeDouble(p1x);
                         //dataOut.writeDouble(p1y);
                         dataOut.flush();

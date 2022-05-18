@@ -42,6 +42,8 @@ public class GameFrame extends Canvas implements Runnable {
     private int FPS, UPS;
     private long nextTime;
     private boolean running;
+    private Boolean waitP1 = true;
+    private Boolean waitP2 = true;
     private Thread thread;
     private GameCanvas GC;
     private Socket socket;
@@ -64,6 +66,7 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.setTitle("Player " + playerID);
         gameFrame.setVisible(true);
         this.addKeyListener(new KeyListener(GC));
+        this.addMouseListener(new MouseEventListener(GC));
         gameFrame.add(this);
         gameFrame.pack();
         gameFrame.setFocusable(true);
@@ -122,13 +125,39 @@ public class GameFrame extends Canvas implements Runnable {
         }
         BufferedImage image = null;
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/landscape/sample.png"));
+            if (MouseEventListener.mode == 0) {
+                image = ImageIO.read(getClass().getResourceAsStream("/landscape/sampleStart.png"));
+            } else if (MouseEventListener.mode == 1) {
+                image = ImageIO.read(getClass().getResourceAsStream("/landscape/loading.png"));
+            } else if (MouseEventListener.mode == 2) {
+                image = ImageIO.read(getClass().getResourceAsStream("/landscape/sample.png"));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+
+
         Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
         g2d.drawImage(image, (int) 0, (int) 0, getWidth(), getHeight(), null);
+        if (MouseEventListener.mode == 0) {
+            g2d.setColor(new Color(255, 0, 0));
+            g2d.fillRect(450, 390, 250, 150);
+            GC.gameStart(false);
+        }
+
+        if (playerID == 1) {
+            waitP1 = GC.getP1Wait();
+        } else {
+            waitP2 = GC.getP2Wait();
+        }
+
+    
+        if (waitP1 == false && waitP2 == false) {
+            MouseEventListener.mode = 2;
+            GC.gameStart(true);
+        }
         GC.draw(g2d);
         g2d.dispose();
         bs.show();
@@ -187,6 +216,11 @@ public class GameFrame extends Canvas implements Runnable {
                         GC.getP2().setYSpeed(dataIn.readDouble());
                         ((Player) GC.getP2()).setPush(dataIn.readBoolean());
                         ((Player) GC.getP2()).setDir(dataIn.readUTF());
+                        if (playerID == 1) {
+                            waitP2 = dataIn.readBoolean();
+                        } else { 
+                            waitP1 = dataIn.readBoolean();
+                        }
                     }
                 }
             } catch (IOException ex) {
@@ -229,6 +263,11 @@ public class GameFrame extends Canvas implements Runnable {
                         dataOut.writeDouble(GC.getP1().getYSpeed());
                         dataOut.writeBoolean(((Player) GC.getP1()).getPush());
                         dataOut.writeUTF(((Player) GC.getP1()).getDir());
+                        if (playerID == 1) {
+                            dataOut.writeBoolean(waitP1);
+                        } else { 
+                           dataOut.writeBoolean(waitP2);
+                        }
                         dataOut.flush();
                         try {
                             Thread.sleep(25);

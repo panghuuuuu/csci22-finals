@@ -35,6 +35,9 @@ public class GameCanvas extends JComponent {
     private double scoreP2 = 0;
     private Wall w;
     private int playerID;
+    private Boolean gameStart = false;
+    private Boolean waitP1 = true;
+    private Boolean waitP2 = true;
 
     public GameCanvas(int w, int h) {
 
@@ -65,30 +68,39 @@ public class GameCanvas extends JComponent {
     public void draw(Graphics2D g2d) {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
-        for (int i = 0; i < gameObject.size(); i++) {
-            temp = gameObject.get(i);
-            temp.draw(g2d);
-        }
-        if (w.isOut(getP1())) {
+        if (MouseEventListener.mode == 1) {
             if (playerID == 1) {
-                scoreP2++;
+                waitP1 = false;
             } else {
-                scoreP1++;
+                waitP2 = false;
             }
-            respawnP1();
-        }
-        if (w.isOut(getP2())) {
-            if (playerID == 1) {
-                scoreP1++;
-            } else {
-                scoreP2++;
+        } 
+        if (gameStart == true) {
+            for (int i = 0; i < gameObject.size(); i++) {
+                temp = gameObject.get(i);
+                temp.draw(g2d);
             }
-            respawnP2();
+            if (w.isOut(getP1())) {
+                if (playerID == 1) {
+                    scoreP2++;
+                } else {
+                    scoreP1++;
+                }
+                respawnP1();
+            }
+            if (w.isOut(getP2())) {
+                if (playerID == 1) {
+                    scoreP1++;
+                } else {
+                    scoreP2++;
+                }
+                respawnP2();
+            }
+            w.draw(g2d);
+            g2d.setFont(new Font("Karla", Font.BOLD | Font.ITALIC, 25));
+            g2d.setPaint(Color.YELLOW);
+            g2d.drawString("P1: " + (int) scoreP1 + "||" + " P2:" + (int) scoreP2, 118, 55);
         }
-        w.draw(g2d);
-        g2d.setFont(new Font("Karla", Font.BOLD | Font.ITALIC, 25));
-        g2d.setPaint(Color.YELLOW);
-        g2d.drawString("P1: " + (int) scoreP1 + "||" + " P2:" + (int) scoreP2, 118, 55);
     }
 
     public void addGameObject(GameObject object) {
@@ -127,5 +139,15 @@ public class GameCanvas extends JComponent {
     public void respawnP2() {
         getP2().setX(500);
         getP2().setY(350);
+    }
+
+    public void gameStart(Boolean n) {
+        gameStart = n;
+    }
+    public Boolean getP1Wait() {
+        return waitP1;
+    }
+    public Boolean getP2Wait() {
+        return waitP2;
     }
 }
