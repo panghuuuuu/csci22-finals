@@ -33,6 +33,7 @@ public class GameCanvas extends JComponent {
     private GameObject temp;
     private double scoreP1 = 0;
     private double scoreP2 = 0;
+    private Wall w;
     private int playerID;
 
     public GameCanvas(int w, int h) {
@@ -49,6 +50,7 @@ public class GameCanvas extends JComponent {
             addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerOne));
         }
         playerID = n;
+        w = new Wall(171, 79, 815, 407, GameObjectID.Wall);
     }
 
     /** Iterates through every gameObject and calls its update method */
@@ -67,7 +69,6 @@ public class GameCanvas extends JComponent {
             temp = gameObject.get(i);
             temp.draw(g2d);
         }
-        Wall w = new Wall(171, 79, 815, 471, GameObjectID.Wall);
         if (w.isOut(getP1())) {
             if (playerID == 1) {
                 scoreP2++;
