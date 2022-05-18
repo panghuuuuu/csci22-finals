@@ -54,7 +54,7 @@ public class Player extends GameObject {
                 moveY(ySpeed);
                 direction = "Down";
                 moveDown = true;
-            } moveDown = false;
+            } else moveDown = false;
             if (KeyListener.push && !pushCoolDown()) {
                 activePush = true;
                 System.out.println("PUSH");
@@ -272,13 +272,13 @@ public class Player extends GameObject {
             if(((Player) p2).getPush()) {
                 switch(((Player) p2).getDir()) {
                     case "Down":
-                        if(this.y + this.height > ((Player) p2).getY()) {
+                        if(this.y > ((Player) p2).getY() + ((Player) p2).getWidth()) {
                             pushSpeed = 20;
                             slideY = true;
                         }
                         break;
                     case "Up":
-                        if(this.y < ((Player) p2).getY() + ((Player) p2).getWidth()) {
+                        if(this.y + this.height < ((Player) p2).getY()) {
                             pushSpeed = -20;
                             slideY = true;
                         }
