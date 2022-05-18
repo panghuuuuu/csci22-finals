@@ -1,21 +1,29 @@
 package gameobjects;
 
 import java.awt.*;
+import java.awt.image.*;
 import java.util.*;
+
+import javax.imageio.ImageIO;
 
 import framework.*;
 
 public class Player extends GameObject {
     private double movementSpeed;
-    private boolean activePush = false, slideX = false, slideY = false, coolDown = false;
+    private boolean activePush = false, slideX = false, slideY = false, coolDown = false, blink = false,
+        moveRight = false, moveLeft = false, moveDown = false;
+    private BufferedImage[] idleR, idleL, idleU, idleD, moveR, moveL, moveD;
+    private int blinkCoolDown;
     private String direction = "Right";
     private int pushSpeed;
+    private int spriteCounter, spriteNum;
     private int coolDownCounter = 0;
 
     public Player(double xPos, double yPos, double w, double h, GameObjectID objectID) {
         super(xPos, yPos, w, h, objectID);
         movementSpeed = 2;
         pushSpeed = 10;
+        getPlayerImages();
     }
 
     @Override
@@ -28,12 +36,14 @@ public class Player extends GameObject {
                 setXSpeed(movementSpeed);
                 moveX(xSpeed);
                 direction = "Right";
-            }
+                moveRight = true;
+            } else moveRight = false;
             if (KeyListener.left) {
                 setXSpeed(-movementSpeed); 
                 moveX(xSpeed);
                 direction = "Left";
-            }
+                moveLeft = true;
+            } else moveLeft = false;
             if (KeyListener.up) {
                 setYSpeed(-movementSpeed);
                 moveY(ySpeed);
@@ -43,11 +53,12 @@ public class Player extends GameObject {
                 setYSpeed(movementSpeed);
                 moveY(ySpeed);
                 direction = "Down";
-            }
+                moveDown = true;
+            } moveDown = false;
             if (KeyListener.push && !pushCoolDown()) {
                 activePush = true;
+                System.out.println("PUSH");
             } else {
-                activePush = false;
                 pushCoolDown();
             }
 
@@ -88,7 +99,8 @@ public class Player extends GameObject {
                     VerticalCollision(tempObject);
 
                     //Push Mechanic
-                    Pushable(tempObject);
+                    HPushable(tempObject);
+                    VPushable(tempObject);
 
                     break;
                 default:
@@ -96,13 +108,76 @@ public class Player extends GameObject {
                 }
             } 
         }
+
+        spriteCounter++;
+        if (spriteCounter > 5) {
+            switch(spriteNum) {
+                case 0:
+                    spriteNum = 1;
+                    break;
+                case 1:
+                    spriteNum = 2;
+                    break;
+                case 2:
+                    spriteNum = 3;
+                    break;
+                case 3:
+                    spriteNum = 0;
+                    break;
+                default:
+                    break;
+            }
+            spriteCounter = 0;
+        }
+
+        blinkCoolDown++;
+        if (blinkCoolDown > 300 && spriteNum == 0) {
+            blink = true;
+            blinkCoolDown = 0;
+        }
     }
 
     @Override
     public void draw(Graphics2D g2d) {
 
-        g2d.setColor(new Color(255,0,0));
-        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle
+        //g2d.setColor(new Color(255,0,0));
+        //g2d.fillRect((int) x + 30,(int) y + 30, (int) width, (int) height); // Creates a Rectangle
+        
+
+        BufferedImage image = null;
+        //Idle Animation
+        switch(direction) {
+            case "Right":
+                if (blink && !moveRight) {
+                    image = idleR[spriteNum];
+                    if(spriteNum == 3) blink = false;
+                } else if (moveRight) {
+                    image = moveR[spriteNum];
+                } else image = idleR[0];
+                break;
+            case "Left":
+                if (blink && !moveLeft) {
+                    image = idleL[spriteNum];
+                    if(spriteNum == 3) blink = false;
+                } else if (moveLeft) {
+                    image = moveL[spriteNum];
+                } else image = idleL[0];
+                break;
+            case "Down":
+                if (blink && !moveDown) {
+                    image = idleD[spriteNum];
+                    if(spriteNum == 3) blink = false;
+                } else if (moveDown) {
+                    image = moveD[spriteNum];
+                } else image = idleD[0];
+                break;
+            case "Up":
+                image = idleU[0];
+            default:
+                break;
+        }
+
+        g2d.drawImage(image, (int) x, (int) y, (int) width+30, (int) height+30, null);
     }
 
     public boolean getPush() {
@@ -169,36 +244,44 @@ public class Player extends GameObject {
     }
 
     //Push Mechanic
-    public void Pushable(GameObject p2) {
+    public void HPushable(GameObject p2) {
         if(((Player) p2).getHRange().intersects(getHBounds())) {
             if(((Player) p2).getPush()) {
-                System.out.println(((Player) p2).getDir());
                 switch(((Player) p2).getDir()) {
                     case "Right":
-                        pushSpeed = 20;
-                        slideX = true;
+                        if(this.x + this.width > ((Player) p2).getX()) {
+                            pushSpeed = 20;
+                            slideX = true;
+                        }
                         break;
                     case "Left":
-                        pushSpeed = -20;
-                        slideX = true;
+                        if(this.x < ((Player) p2).getX() + ((Player) p2).getWidth()) {
+                            pushSpeed = -20;
+                            slideX = true;
+                        }
                         break;
                     default:
                         break;
                 }
             }
         }
+    }
 
+    public void VPushable(GameObject p2) {
         if(((Player) p2).getVRange().intersects(getVBounds())) {
             if(((Player) p2).getPush()) {
-                System.out.println(((Player) p2).getDir());
                 switch(((Player) p2).getDir()) {
                     case "Down":
-                        pushSpeed = 20;
-                        slideY = true;
+                        if(this.y + this.height > ((Player) p2).getY()) {
+                            pushSpeed = 20;
+                            slideY = true;
+                        }
                         break;
                     case "Up":
-                        pushSpeed = -20;
-                        slideY = true;
+                        if(this.y < ((Player) p2).getY() + ((Player) p2).getWidth()) {
+                            pushSpeed = -20;
+                            slideY = true;
+                        }
                         break;
                     default:
                         break;
@@ -209,8 +292,9 @@ public class Player extends GameObject {
 
     private boolean pushCoolDown() {
         if (activePush) {
-            coolDownCounter = 120; //3 seconds for 60 UPS
+            coolDownCounter = 120; //2 seconds for 60 UPS
             coolDown = true;
+            activePush = false;
         } 
         if (coolDown) {
             coolDownCounter--;
@@ -219,5 +303,55 @@ public class Player extends GameObject {
             coolDown = false;
         }
         return coolDown;
+    }
+
+    /////////////
+    //ANIMATION//
+    /////////////
+
+    public void getPlayerImages() {
+        try {
+                idleR = new BufferedImage[4];
+                idleR[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleR1.png"));
+                idleR[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleR2.png"));
+                idleR[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleR3.png"));
+                idleR[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleR4.png"));
+
+                idleL = new BufferedImage[4];
+                idleL[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleL1.png"));
+                idleL[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleL2.png"));
+                idleL[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleL3.png"));
+                idleL[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleL4.png"));
+
+                idleD = new BufferedImage[4];
+                idleD[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleD1.png"));
+                idleD[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleD2.png"));
+                idleD[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleD3.png"));
+                idleD[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleD4.png"));
+
+                idleU = new BufferedImage[1];
+                idleU[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleU.png"));
+
+                moveR = new BufferedImage[4];
+                moveR[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveR1.png"));
+                moveR[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveR2.png"));
+                moveR[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveR3.png"));
+                moveR[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveR4.png"));
+
+                moveL = new BufferedImage[4];
+                moveL[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveL1.png"));
+                moveL[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveL2.png"));
+                moveL[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveL3.png"));
+                moveL[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveL4.png"));
+
+                moveD = new BufferedImage[4];
+                moveD[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveD1.png"));
+                moveD[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveD2.png"));
+                moveD[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveD3.png"));
+                moveD[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveD4.png"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

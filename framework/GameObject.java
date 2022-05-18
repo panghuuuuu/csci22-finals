@@ -110,17 +110,17 @@ public abstract class GameObject {
 
     public Rectangle getHBounds() {
         double hx = this.x + this.xSpeed;
-        double hy = this.y + 4;
+        double hy = this.y + 2;
         double hw = this.width + this.xSpeed/2;
-        double hh = this.height - 8;
+        double hh = this.height - 4;
 
         return new Rectangle((int) hx, (int) hy, (int) hw, (int) hh);
     }
 
     public Rectangle getVBounds() {
-        double vx = this.x + 4;
+        double vx = this.x + 2;
         double vy = this.y + this.ySpeed;
-        double vw = this.width - 8;
+        double vw = this.width - 4;
         double vh = this.height + this.ySpeed/2;
 
         return new Rectangle((int) vx, (int) vy, (int) vw, (int) vh);
