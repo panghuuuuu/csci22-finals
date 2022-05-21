@@ -99,8 +99,12 @@ public class Player extends GameObject {
                     VerticalCollision(tempObject);
 
                     //Push Mechanic
-                    HPushable(tempObject);
-                    VPushable(tempObject);
+                    if(((Player) tempObject).getHRange().intersects(getHBounds())) {
+                        HPushable(tempObject);
+                    }
+                    if(((Player) tempObject).getVRange().intersects(getVBounds())) {
+                        VPushable(tempObject);
+                    }
 
                     break;
                 default:
@@ -140,8 +144,8 @@ public class Player extends GameObject {
     @Override
     public void draw(Graphics2D g2d) {
 
-        //g2d.setColor(new Color(255,0,0));
-        //g2d.fillRect((int) x + 30,(int) y + 30, (int) width, (int) height); // Creates a Rectangle
+        g2d.setColor(new Color(255,0,0));
+        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle
         
 
         BufferedImage image = null;
@@ -176,8 +180,11 @@ public class Player extends GameObject {
             default:
                 break;
         }
-
-        g2d.drawImage(image, (int) x, (int) y, (int) width+30, (int) height+30, null);
+        g2d.setColor(Color.BLACK);
+        g2d.fill(getVRange());
+        g2d.setColor(Color.BLUE);
+        g2d.fill(getHRange());
+        g2d.drawImage(image, (int) x-15, (int) y-15, (int) width+30, (int) height+30, null);
     }
 
     public boolean getPush() {
@@ -245,17 +252,17 @@ public class Player extends GameObject {
 
     //Push Mechanic
     public void HPushable(GameObject p2) {
-        if(((Player) p2).getHRange().intersects(getHBounds())) {
             if(((Player) p2).getPush()) {
                 switch(((Player) p2).getDir()) {
                     case "Right":
-                        if(this.x + this.width > ((Player) p2).getX()) {
+                        if(this.x > ((Player) p2).getX()) {
+                            System.out.println("PUSHES");
                             pushSpeed = 20;
                             slideX = true;
                         }
                         break;
                     case "Left":
-                        if(this.x < ((Player) p2).getX() + ((Player) p2).getWidth()) {
+                        if(this.x < ((Player) p2).getX()) {
                             pushSpeed = -20;
                             slideX = true;
                         }
@@ -264,21 +271,20 @@ public class Player extends GameObject {
                         break;
                 }
             }
-        }
     }
-
     public void VPushable(GameObject p2) {
-        if(((Player) p2).getVRange().intersects(getVBounds())) {
             if(((Player) p2).getPush()) {
                 switch(((Player) p2).getDir()) {
                     case "Down":
-                        if(this.y > ((Player) p2).getY() + ((Player) p2).getWidth()) {
+                        if(((Player) p2).getY() < this.y) {
+                            System.out.println("Down Range");
                             pushSpeed = 20;
                             slideY = true;
                         }
                         break;
                     case "Up":
-                        if(this.y + this.height < ((Player) p2).getY()) {
+                        if(((Player) p2).getY() > this. y) {
+                            System.out.println("Down Range");
                             pushSpeed = -20;
                             slideY = true;
                         }
@@ -287,7 +293,6 @@ public class Player extends GameObject {
                         break;
                 }
             }
-        }
     }
 
     private boolean pushCoolDown() {

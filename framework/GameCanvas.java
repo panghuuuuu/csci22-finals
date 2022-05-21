@@ -62,12 +62,7 @@ public class GameCanvas extends JComponent {
             temp = gameObject.get(i);
             temp.update(gameObject);
         }
-    }
 
-    /** Iterates through every gameObject and calls its draw method */
-    public void draw(Graphics2D g2d) {
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHints(rh);
         if (MouseEventListener.mode == 1) {
             if (playerID == 1) {
                 waitP1 = false;
@@ -75,11 +70,7 @@ public class GameCanvas extends JComponent {
                 waitP2 = false;
             }
         } 
-        if (gameStart == true) {
-            for (int i = 0; i < gameObject.size(); i++) {
-                temp = gameObject.get(i);
-                temp.draw(g2d);
-            }
+        if(gameStart == true) {
             if (w.isOut(getP1())) {
                 if (playerID == 1) {
                     scoreP2++;
@@ -95,6 +86,19 @@ public class GameCanvas extends JComponent {
                     scoreP2++;
                 }
                 respawnP2();
+            }
+        }
+    }
+
+    /** Iterates through every gameObject and calls its draw method */
+    public void draw(Graphics2D g2d) {
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHints(rh);
+        
+        if (gameStart == true) {
+            for (int i = 0; i < gameObject.size(); i++) {
+                temp = gameObject.get(i);
+                temp.draw(g2d);
             }
             w.draw(g2d);
             g2d.setFont(new Font("Karla", Font.BOLD | Font.ITALIC, 25));

@@ -50,12 +50,14 @@ public class GameFrame extends Canvas implements Runnable {
     private ReadFromServer rfsRunnable;
     private WriteToServer wtsRunnable;
     private int playerID;
+    private BufferedImage[] image;
     private double[] PlayerPositions;
 
     // Constructor method for GameFrame class
     public GameFrame() {
         gameFrame = new JFrame();
         GC = new GameCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
+        getBackgrounds();
     }
 
     /** Setups the Frame by adding JComponents and Listeners */
@@ -112,7 +114,7 @@ public class GameFrame extends Canvas implements Runnable {
     /** Calls for non-animation updates for every instance of GameObject */
     public void update() {
         GC.update();
-        UPS++;
+        UPS++;       
     }
 
     /** Calls for animation updates for every instance of GameObject */
@@ -123,24 +125,10 @@ public class GameFrame extends Canvas implements Runnable {
             this.createBufferStrategy(2);
             return;
         }
-        BufferedImage image = null;
-        try {
-            if (MouseEventListener.mode == 0) {
-                image = ImageIO.read(getClass().getResourceAsStream("/landscape/sampleStart.png"));
-            } else if (MouseEventListener.mode == 1) {
-                image = ImageIO.read(getClass().getResourceAsStream("/landscape/loading.png"));
-            } else if (MouseEventListener.mode == 2) {
-                image = ImageIO.read(getClass().getResourceAsStream("/landscape/sample.png"));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        BufferedImage bg = image[MouseEventListener.mode];
         
-
-
         Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
-        g2d.drawImage(image, (int) 0, (int) 0, getWidth(), getHeight(), null);
+        g2d.drawImage(bg, (int) 0, (int) 0, getWidth(), getHeight(), null);
         if (MouseEventListener.mode == 0) {
             g2d.setColor(new Color(255, 0, 0));
             g2d.fillRect(450, 390, 250, 150);
@@ -170,6 +158,17 @@ public class GameFrame extends Canvas implements Runnable {
             FPS = 0;
             UPS = 0;
             nextTime = System.currentTimeMillis() + 1000;
+        }
+    }
+
+    public void getBackgrounds () {
+        try {
+            image = new BufferedImage[3];
+            image[0] = ImageIO.read(getClass().getResourceAsStream("/landscape/sampleStart.png"));
+            image[1] = ImageIO.read(getClass().getResourceAsStream("/landscape/loading.png"));
+            image[2] = ImageIO.read(getClass().getResourceAsStream("/landscape/sample.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -206,16 +205,19 @@ public class GameFrame extends Canvas implements Runnable {
         public void run() {
             try {
                 while (true) {
-                    if (GC.getP2() == null) {
-                        System.out.println("PLAYER ONE NOT INITIALIZED");
+                    GameObject P2 = GC.getP2();
+                    if (P2 == null) {
+                        P2 = GC.getP2();
+                        System.out.println("PLAYER TWO NOT INITIALIZED");
                     }
-                    if (GC.getP2() != null) {
-                        GC.getP2().setX(dataIn.readDouble());
-                        GC.getP2().setY(dataIn.readDouble());
-                        GC.getP2().setXSpeed(dataIn.readDouble());
-                        GC.getP2().setYSpeed(dataIn.readDouble());
-                        ((Player) GC.getP2()).setPush(dataIn.readBoolean());
-                        ((Player) GC.getP2()).setDir(dataIn.readUTF());
+                    if (P2 != null) {
+                        P2 = GC.getP2();
+                        P2.setX(dataIn.readDouble());
+                        P2.setY(dataIn.readDouble());
+                        P2.setXSpeed(dataIn.readDouble());
+                        P2.setYSpeed(dataIn.readDouble());
+                        ((Player) P2).setPush(dataIn.readBoolean());
+                        ((Player) P2).setDir(dataIn.readUTF());
                         if (playerID == 1) {
                             waitP2 = dataIn.readBoolean();
                         } else { 
@@ -253,16 +255,19 @@ public class GameFrame extends Canvas implements Runnable {
         public void run() {
             try {
                 while (true) {
-                    if (GC.getP1() == null) {
+                    GameObject P1 = GC.getP1();
+                    if (P1 == null) {
+                        P1 = GC.getP1();
                         System.out.println("PLAYER ONE NOT INITIALIZED");
                     }
-                    if (GC.getP1() != null) {
-                        dataOut.writeDouble(GC.getP1().getX());
-                        dataOut.writeDouble(GC.getP1().getY());
-                        dataOut.writeDouble(GC.getP1().getXSpeed());
-                        dataOut.writeDouble(GC.getP1().getYSpeed());
-                        dataOut.writeBoolean(((Player) GC.getP1()).getPush());
-                        dataOut.writeUTF(((Player) GC.getP1()).getDir());
+                    if (P1 != null) {
+                        P1 = GC.getP1();
+                        dataOut.writeDouble(P1.getX());
+                        dataOut.writeDouble(P1.getY());
+                        dataOut.writeDouble(P1.getXSpeed());
+                        dataOut.writeDouble(P1.getYSpeed());
+                        dataOut.writeBoolean(((Player) P1).getPush());
+                        dataOut.writeUTF(((Player) P1).getDir());
                         if (playerID == 1) {
                             dataOut.writeBoolean(waitP1);
                         } else { 
