@@ -11,8 +11,8 @@ import framework.*;
 public class Player extends GameObject {
     private double movementSpeed;
     private boolean activePush = false, slideX = false, slideY = false, coolDown = false, blink = false,
-        moveRight = false, moveLeft = false, moveDown = false;
-    private BufferedImage[] idleR, idleL, idleU, idleD, moveR, moveL, moveD;
+        moveRight = false, moveLeft = false, moveDown = false, pushingAnimH = false, pushingAnimV = false, compAnim = false;
+    private BufferedImage[] idleR, idleL, idleU, idleD, moveR, moveL, moveD, pushR, pushL, pushD, pushU;
     private int[] spawnProps;
     private int blinkCoolDown;
     private String direction = "Right";
@@ -61,7 +61,19 @@ public class Player extends GameObject {
                 moveDown = true;
             } else moveDown = false;
             if (KeyListener.push && !pushCoolDown()) {
-                activePush = true;
+                //activePush = true;
+                switch(direction) {
+                    case "Right":
+                    case "Left":
+                        pushingAnimH = true;
+                        break;
+                    case "Up":
+                    case "Down":
+                        pushingAnimV = true;
+                        break;
+                    default:
+                        break;
+                }
             } else {
                 pushCoolDown();
             }
@@ -119,6 +131,7 @@ public class Player extends GameObject {
 
         spriteCounter++;
         if (spriteCounter > 5) {
+
             switch(spriteNum) {
                 case 0:
                     spriteNum = 1;
@@ -152,31 +165,48 @@ public class Player extends GameObject {
         //Idle Animation
         switch(direction) {
             case "Right":
-                if (blink && !moveRight) {
+                if (blink && !moveRight && !pushingAnimH) {
                     image = idleR[spriteNum];
                     if(spriteNum == 3) blink = false;
-                } else if (moveRight) {
+                } else if (moveRight && !pushingAnimH) {
                     image = moveR[spriteNum];
+                } else if (pushingAnimH) {
+                    if(spriteNum != 0 && compAnim == false) {spriteNum = 0; compAnim = true;}
+                    image = pushR[spriteNum];
+                    if(spriteNum == 3) {pushingAnimH = false;  activePush = true;}
                 } else image = idleR[0];
                 break;
             case "Left":
                 if (blink && !moveLeft) {
                     image = idleL[spriteNum];
                     if(spriteNum == 3) blink = false;
-                } else if (moveLeft) {
+                } else if (moveLeft  && !pushingAnimH) {
                     image = moveL[spriteNum];
+                } else if (pushingAnimH) {
+                    if(spriteNum != 0 && compAnim == false) {spriteNum = 0; compAnim = true;}
+                    image = pushL[spriteNum];
+                    if(spriteNum == 3) {pushingAnimH = false;  activePush = true;}
                 } else image = idleL[0];
                 break;
             case "Down":
                 if (blink && !moveDown) {
                     image = idleD[spriteNum];
                     if(spriteNum == 3) blink = false;
-                } else if (moveDown) {
+                } else if (moveDown  && !pushingAnimV) {
                     image = moveD[spriteNum];
+                } else if (pushingAnimV) {
+                    if(spriteNum != 0 && compAnim == false) {spriteNum = 0; compAnim = true;}
+                    image = pushD[spriteNum];
+                    if(spriteNum == 3) {pushingAnimV = false;  activePush = true;}
                 } else image = idleD[0];
                 break;
             case "Up":
-                image = idleU[0];
+                if (pushingAnimV) {
+                    if(spriteNum != 0 && compAnim == false) {spriteNum = 0; compAnim = true;}
+                    image = pushU[spriteNum];
+                    if(spriteNum == 3) {pushingAnimV = false; activePush = true;}
+                } else 
+                    image = idleU[0];
             default:
                 break;
         }
@@ -184,7 +214,10 @@ public class Player extends GameObject {
         //g2d.fill(getVRange());
         //g2d.setColor(Color.BLUE);
         //g2d.fill(getHRange());
-        g2d.drawImage(image, (int) x-15, (int) y-15, (int) width+30, (int) height+30, null);
+        if(!pushingAnimH)
+            g2d.drawImage(image, (int) x-15, (int) y-15, (int) width+30, (int) height+30, null);
+        else
+            g2d.drawImage(image, (int) x-65, (int) y-15, (int) width+130, (int) height+30, null);
 
         //if(this.playerID == 1) g2d.setColor(new Color(255,0,0)); else g2d.setColor(new Color(0,0,255));
         //g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle
@@ -382,6 +415,31 @@ public class Player extends GameObject {
                 moveD[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveD2.png"));
                 moveD[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveD3.png"));
                 moveD[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveD4.png"));
+
+                pushR = new BufferedImage[4];
+                pushR[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushR1.png"));
+                pushR[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushR2.png"));
+                pushR[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushR3.png"));
+                pushR[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushR4.png"));
+
+                pushL = new BufferedImage[4];
+                pushL[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushL1.png"));
+                pushL[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushL2.png"));
+                pushL[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushL3.png"));
+                pushL[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushL4.png"));
+
+                pushD = new BufferedImage[4];
+                pushD[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushD1.png"));
+                pushD[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushD2.png"));
+                pushD[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushD3.png"));
+                pushD[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushD4.png"));
+
+                pushU = new BufferedImage[4];
+                pushU[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushU1.png"));
+                pushU[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushU2.png"));
+                pushU[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushU3.png"));
+                pushU[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/pushing/playerOnePushU4.png"));
+
 
         } catch (Exception e) {
             e.printStackTrace();
