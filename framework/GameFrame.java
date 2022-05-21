@@ -223,6 +223,7 @@ public class GameFrame extends Canvas implements Runnable {
                         } else { 
                             waitP1 = dataIn.readBoolean();
                         }
+                        GC.setLocalP2Points((Player) P2, dataIn.readInt());
                     }
                 }
             } catch (IOException ex) {
@@ -273,6 +274,7 @@ public class GameFrame extends Canvas implements Runnable {
                         } else { 
                            dataOut.writeBoolean(waitP2);
                         }
+                        dataOut.writeInt(GC.getServerPoint((Player) P1));
                         dataOut.flush();
                         try {
                             Thread.sleep(25);

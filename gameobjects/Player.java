@@ -320,6 +320,9 @@ public class Player extends GameObject {
     public boolean getCoolDown() {
         return this.coolDown;
     }
+    public int getPlayerID() {
+        return this.playerID;
+    }
 
     public void setSpawnProps(int n) {
         if (n == 1) {

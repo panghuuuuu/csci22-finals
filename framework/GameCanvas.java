@@ -31,8 +31,9 @@ public class GameCanvas extends JComponent {
     // Declaration of Variables
     public ArrayList<GameObject> gameObject = new ArrayList<GameObject>();
     private GameObject temp;
-    private double scoreP1 = 0;
-    private double scoreP2 = 0;
+    private int scoreP1 = 0;
+    private int scoreP2 = 0;
+    private int serverPoint = 0;
     private Wall w;
     private int playerID;
     private Boolean gameStart = false;
@@ -46,10 +47,10 @@ public class GameCanvas extends JComponent {
     public void newPlayer(int n) {
         if (n == 1) {
             addGameObject(new Player(248, 282, 50, 50, GameObjectID.PlayerOne, n));
-            addGameObject(new Player(856, 282, 50, 50, GameObjectID.PlayerTwo, n-1));
+            addGameObject(new Player(856, 282, 50, 50, GameObjectID.PlayerTwo, 2));
             playerID = n;
         } else if (n == 2) {
-            addGameObject(new Player(248, 282, 50, 50, GameObjectID.PlayerTwo, n-1));
+            addGameObject(new Player(248, 282, 50, 50, GameObjectID.PlayerTwo, 1));
             addGameObject(new Player(856, 282, 50, 50, GameObjectID.PlayerOne, n));
         }
         playerID = n;
@@ -73,11 +74,7 @@ public class GameCanvas extends JComponent {
         } 
         if(gameStart == true) {
             if (w.isOut(getP1())) {
-                if (playerID == 1) {
-                    scoreP2++;
-                } else {
-                    scoreP1++;
-                }
+                if (((Player) getP1()).getPlayerID() == 1) scoreP2++; else if (((Player) getP1()).getPlayerID() == 2) scoreP1++;
                 respawn();
             }
         }
@@ -128,6 +125,22 @@ public class GameCanvas extends JComponent {
         return null;
     }
 
+    public int getServerPoint(Player p) {
+        if (p.getPlayerID() == 1) {
+            return this.scoreP2;
+        } else if (p.getPlayerID() == 2) {
+            return this.scoreP1;
+        }
+        return 0;
+    }
+
+    public void setLocalP2Points(Player p, int i) {
+        if (p.getPlayerID() == 1) {
+            this.scoreP2 = i;
+        } else if (p.getPlayerID() == 2) {
+            this.scoreP1 = i;
+        }
+    }
     public void respawn() {
         Player P1 = ((Player) getP1());
         P1.setX(P1.getSpawnProps()[0]);

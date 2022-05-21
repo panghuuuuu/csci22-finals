@@ -10,7 +10,7 @@ import framework.*;
 
 public class PushButton extends GameObject {
     private Player player;
-    private BufferedImage[] pushed, available, coolDown;
+    private BufferedImage[] available, coolDown;
     private int spriteCounter = 0, spriteNum = 0;
 
 
@@ -24,7 +24,7 @@ public class PushButton extends GameObject {
     @Override
     public void update(ArrayList<GameObject> gameObject) {
         spriteCounter++;
-        if (spriteCounter > 35) {
+        if (spriteCounter > 40) {
             switch(spriteNum) {
                 case 0:
                     spriteNum = 1;
