@@ -54,6 +54,7 @@ public class GameCanvas extends JComponent {
         }
         playerID = n;
         w = new Wall(171, 79, 815, 407, GameObjectID.Wall);
+        addGameObject(new PushButton(15, 642, 120, 60, GameObjectID.Button, (Player) getP1()));
     }
 
     /** Iterates through every gameObject and calls its update method */

@@ -317,6 +317,10 @@ public class Player extends GameObject {
         return coolDown;
     }
 
+    public boolean getCoolDown() {
+        return this.coolDown;
+    }
+
     public void setSpawnProps(int n) {
         if (n == 1) {
             spawnProps = new int[] {248, 282, 1};
