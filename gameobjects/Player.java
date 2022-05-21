@@ -148,8 +148,6 @@ public class Player extends GameObject {
     @Override
     public void draw(Graphics2D g2d) {
 
-        
-
         BufferedImage image = null;
         //Idle Animation
         switch(direction) {
@@ -340,43 +338,43 @@ public class Player extends GameObject {
     public void getPlayerImages() {
         try {
                 idleR = new BufferedImage[4];
-                idleR[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleR1.png"));
-                idleR[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleR2.png"));
-                idleR[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleR3.png"));
-                idleR[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleR4.png"));
+                idleR[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleR1.png"));
+                idleR[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleR2.png"));
+                idleR[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleR3.png"));
+                idleR[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleR4.png"));
 
                 idleL = new BufferedImage[4];
-                idleL[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleL1.png"));
-                idleL[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleL2.png"));
-                idleL[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleL3.png"));
-                idleL[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleL4.png"));
+                idleL[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleL1.png"));
+                idleL[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleL2.png"));
+                idleL[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleL3.png"));
+                idleL[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleL4.png"));
 
                 idleD = new BufferedImage[4];
-                idleD[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleD1.png"));
-                idleD[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleD2.png"));
-                idleD[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleD3.png"));
-                idleD[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleD4.png"));
+                idleD[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleD1.png"));
+                idleD[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleD2.png"));
+                idleD[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleD3.png"));
+                idleD[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleD4.png"));
 
                 idleU = new BufferedImage[1];
-                idleU[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/idle/playerOneidleU.png"));
+                idleU[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/idle/playerOneidleU.png"));
 
                 moveR = new BufferedImage[4];
-                moveR[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveR1.png"));
-                moveR[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveR2.png"));
-                moveR[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveR3.png"));
-                moveR[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveR4.png"));
+                moveR[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveR1.png"));
+                moveR[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveR2.png"));
+                moveR[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveR3.png"));
+                moveR[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveR4.png"));
 
                 moveL = new BufferedImage[4];
-                moveL[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveL1.png"));
-                moveL[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveL2.png"));
-                moveL[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveL3.png"));
-                moveL[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveL4.png"));
+                moveL[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveL1.png"));
+                moveL[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveL2.png"));
+                moveL[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveL3.png"));
+                moveL[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveL4.png"));
 
                 moveD = new BufferedImage[4];
-                moveD[0] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveD1.png"));
-                moveD[1] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveD2.png"));
-                moveD[2] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveD3.png"));
-                moveD[3] = ImageIO.read(getClass().getResourceAsStream("/playerOne-sprite/moving/playerOneMoveD4.png"));
+                moveD[0] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveD1.png"));
+                moveD[1] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveD2.png"));
+                moveD[2] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveD3.png"));
+                moveD[3] = ImageIO.read(getClass().getResourceAsStream("/res/playerOne-sprite/moving/playerOneMoveD4.png"));
 
         } catch (Exception e) {
             e.printStackTrace();

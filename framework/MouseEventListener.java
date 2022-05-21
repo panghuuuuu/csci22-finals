@@ -16,8 +16,6 @@ public class MouseEventListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println(e.getX());
-        System.out.println(e.getY());
         if (mode == 0) {
             start = new Rectangle(200, 540, 675, 95);
             if(start.contains(e.getPoint())) mode = 1;
