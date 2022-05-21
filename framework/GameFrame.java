@@ -130,8 +130,8 @@ public class GameFrame extends Canvas implements Runnable {
         Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
         g2d.drawImage(bg, (int) 0, (int) 0, getWidth(), getHeight(), null);
         if (MouseEventListener.mode == 0) {
-            g2d.setColor(new Color(255, 0, 0));
-            g2d.fillRect(450, 390, 250, 150);
+           //g2d.setColor(new Color(255, 0, 0));
+           //g2d.fillRect(200, 540, 675, 95);
             GC.gameStart(false);
         }
 

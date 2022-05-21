@@ -182,10 +182,10 @@ public class Player extends GameObject {
             default:
                 break;
         }
-        g2d.setColor(Color.BLACK);
-        g2d.fill(getVRange());
-        g2d.setColor(Color.BLUE);
-        g2d.fill(getHRange());
+        //g2d.setColor(Color.BLACK);
+        //g2d.fill(getVRange());
+        //g2d.setColor(Color.BLUE);
+        //g2d.fill(getHRange());
         g2d.drawImage(image, (int) x-15, (int) y-15, (int) width+30, (int) height+30, null);
 
         //if(this.playerID == 1) g2d.setColor(new Color(255,0,0)); else g2d.setColor(new Color(0,0,255));

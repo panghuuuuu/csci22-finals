@@ -1,9 +1,11 @@
 package framework;
 
 import java.awt.event.*;
+import java.awt.*;
 
 public class MouseEventListener extends MouseAdapter {
     private GameCanvas gCanvas;
+    private Rectangle start;
     public static int mode = 0;
     public static int landscape = 0;
 
@@ -14,10 +16,14 @@ public class MouseEventListener extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        System.out.println(e.getX());
+        System.out.println(e.getY());
         if (mode == 0) {
-            if (450 <= e.getX() && e.getX() <= 700 && 390 <= e.getY() && e.getY() <= 540) {
-                mode = 1;
-            }    
+            start = new Rectangle(200, 540, 675, 95);
+            if(start.contains(e.getPoint())) mode = 1;
+            //if (200 <= e.getX() && e.getX() <= 875 && 638 <= e.getY() && e.getY() <= 540) {
+            //    mode = 1;
+            //}    
         }   
     }
 
