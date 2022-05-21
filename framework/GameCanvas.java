@@ -45,12 +45,12 @@ public class GameCanvas extends JComponent {
 
     public void newPlayer(int n) {
         if (n == 1) {
-            addGameObject(new Player(250, 250, 50, 50, GameObjectID.PlayerOne));
-            addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerTwo));
+            addGameObject(new Player(248, 282, 50, 50, GameObjectID.PlayerOne, n));
+            addGameObject(new Player(856, 282, 50, 50, GameObjectID.PlayerTwo, n-1));
             playerID = n;
         } else if (n == 2) {
-            addGameObject(new Player(250, 250, 50, 50, GameObjectID.PlayerTwo));
-            addGameObject(new Player(200, 200, 50, 50, GameObjectID.PlayerOne));
+            addGameObject(new Player(248, 282, 50, 50, GameObjectID.PlayerTwo, n-1));
+            addGameObject(new Player(856, 282, 50, 50, GameObjectID.PlayerOne, n));
         }
         playerID = n;
         w = new Wall(171, 79, 815, 407, GameObjectID.Wall);
@@ -77,15 +77,7 @@ public class GameCanvas extends JComponent {
                 } else {
                     scoreP1++;
                 }
-                respawnP1();
-            }
-            if (w.isOut(getP2())) {
-                if (playerID == 1) {
-                    scoreP1++;
-                } else {
-                    scoreP2++;
-                }
-                respawnP2();
+                respawn();
             }
         }
     }
@@ -135,15 +127,14 @@ public class GameCanvas extends JComponent {
         return null;
     }
 
-    public void respawnP1() {
-        getP1().setX(500);
-        getP1().setY(350);
+    public void respawn() {
+        Player P1 = ((Player) getP1());
+        P1.setX(P1.getSpawnProps()[0]);
+        P1.setY(P1.getSpawnProps()[1]);
+        if (P1.getSpawnProps()[2] == 1) P1.setDir("Right"); else P1.setDir("Left");
+        P1.setPushSpeed(0);
     }
 
-    public void respawnP2() {
-        getP2().setX(500);
-        getP2().setY(350);
-    }
 
     public void gameStart(Boolean n) {
         gameStart = n;

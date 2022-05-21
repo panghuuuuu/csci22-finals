@@ -13,17 +13,22 @@ public class Player extends GameObject {
     private boolean activePush = false, slideX = false, slideY = false, coolDown = false, blink = false,
         moveRight = false, moveLeft = false, moveDown = false;
     private BufferedImage[] idleR, idleL, idleU, idleD, moveR, moveL, moveD;
+    private int[] spawnProps;
     private int blinkCoolDown;
     private String direction = "Right";
     private int pushSpeed;
     private int spriteCounter, spriteNum;
-    private int coolDownCounter = 0;
+    private int coolDownCounter = 125;
+    private int playerID;
 
-    public Player(double xPos, double yPos, double w, double h, GameObjectID objectID) {
+    public Player(double xPos, double yPos, double w, double h, GameObjectID objectID, int pid) {
         super(xPos, yPos, w, h, objectID);
         movementSpeed = 2;
         pushSpeed = 10;
+        playerID = pid;
         getPlayerImages();
+        setSpawnProps(pid);
+        if (pid == 1) direction = "Right"; else direction = "Left";
     }
 
     @Override
@@ -57,7 +62,6 @@ public class Player extends GameObject {
             } else moveDown = false;
             if (KeyListener.push && !pushCoolDown()) {
                 activePush = true;
-                System.out.println("PUSH");
             } else {
                 pushCoolDown();
             }
@@ -144,8 +148,6 @@ public class Player extends GameObject {
     @Override
     public void draw(Graphics2D g2d) {
 
-        g2d.setColor(new Color(255,0,0));
-        g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle
         
 
         BufferedImage image = null;
@@ -185,6 +187,10 @@ public class Player extends GameObject {
         g2d.setColor(Color.BLUE);
         g2d.fill(getHRange());
         g2d.drawImage(image, (int) x-15, (int) y-15, (int) width+30, (int) height+30, null);
+
+        //if(this.playerID == 1) g2d.setColor(new Color(255,0,0)); else g2d.setColor(new Color(0,0,255));
+        //g2d.fillRect((int) x,(int) y, (int) width, (int) height); // Creates a Rectangle
+
     }
 
     public boolean getPush() {
@@ -256,13 +262,14 @@ public class Player extends GameObject {
                 switch(((Player) p2).getDir()) {
                     case "Right":
                         if(this.x > ((Player) p2).getX()) {
-                            System.out.println("PUSHES");
+                            System.out.println("PUSHED RIGHT");
                             pushSpeed = 20;
                             slideX = true;
                         }
                         break;
                     case "Left":
                         if(this.x < ((Player) p2).getX()) {
+                            System.out.println("PUSHED LEFT");
                             pushSpeed = -20;
                             slideX = true;
                         }
@@ -297,17 +304,33 @@ public class Player extends GameObject {
 
     private boolean pushCoolDown() {
         if (activePush) {
-            coolDownCounter = 120; //2 seconds for 60 UPS
             coolDown = true;
-            activePush = false;
+            if (coolDownCounter <= 120) {
+                activePush = false;
+            }
         } 
         if (coolDown) {
             coolDownCounter--;
         }
         if (coolDownCounter <= 0) {
+            coolDownCounter = 125; //2 seconds for 60 UPS
             coolDown = false;
         }
         return coolDown;
+    }
+
+    public void setSpawnProps(int n) {
+        if (n == 1) {
+            spawnProps = new int[] {248, 282, 1};
+        } else {
+            spawnProps = new int[] {856, 282, 0};
+        }
+    }
+    public int[] getSpawnProps() {
+        return this.spawnProps;
+    }
+    public void setPushSpeed(int s) {
+        this.pushSpeed = s;
     }
 
     /////////////
