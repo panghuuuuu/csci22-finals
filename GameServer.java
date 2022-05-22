@@ -17,13 +17,13 @@
 */
 import java.io.*;
 import java.net.*;
-//import java.util.*;
+import java.util.*;
 
 //import javax.xml.crypto.Data;
 
 public class GameServer {
     private ServerSocket ss;
-    // (optional) private ArrayList<Socket> sockets;
+    private ArrayList<Socket> sockets;
     private int numPlayer;
     private int maxPlayers;
     private double[] p1props, p2props;
@@ -45,6 +45,7 @@ public class GameServer {
         System.out.println("=== Game Server ===");
         numPlayer = 0;
         maxPlayers = 2;
+        sockets = new ArrayList<>();
         p1props = new double[] {50, 50, 0, 0};
         p2props = new double[] {200, 200, 0, 0};
         p1push = p2push = false;
@@ -62,6 +63,7 @@ public class GameServer {
             System.out.println("NOW ACCEPTING CONNECTIONS...");
             while (numPlayer < maxPlayers) {
                 Socket sock = ss.accept();
+                sockets.add(sock);
                 DataInputStream dataIn = new DataInputStream(sock.getInputStream());
                 DataOutputStream dataOut = new DataOutputStream(sock.getOutputStream());
                 numPlayer++;
@@ -96,6 +98,18 @@ public class GameServer {
         }
     }
 
+    public void closeSocketsOnShutdown() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+          try {
+            for(Socket skt : sockets) {
+              skt.close();
+            }
+          } catch (IOException e) {
+            System.out.println("IOException from closeSocketsOnShutdown() method.");
+          }
+        }));
+      }
+    
     private class ReadFromClient implements Runnable {
         private int playerID;
         private DataInputStream dataIn;
@@ -179,6 +193,7 @@ public class GameServer {
 
     public static void main(String[] args) {
         GameServer gs = new GameServer();
+        gs.closeSocketsOnShutdown();
         gs.waitForConnections();
     }
 }

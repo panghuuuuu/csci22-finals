@@ -211,7 +211,7 @@ public class GameFrame extends Canvas implements Runnable {
             System.out.println("IOException from connectToServer() method.");
         }
     }
-    /*public void closeSocketOnShutdown() {
+    public void closeSocketOnShutdown() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
           try {
             socket.close();
@@ -220,8 +220,6 @@ public class GameFrame extends Canvas implements Runnable {
           }
         }));
     }
-    */
-    
     private class ReadFromServer implements Runnable {
         private DataInputStream dataIn;
 

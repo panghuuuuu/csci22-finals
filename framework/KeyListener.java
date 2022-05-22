@@ -14,8 +14,6 @@ public class KeyListener extends KeyAdapter {
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        //System.out.printf("up: %b down: %b, left: %b, right: %b%n", up, down, left, right);
-
         if (key == KeyEvent.VK_ESCAPE) {
             System.exit(1);
         }
