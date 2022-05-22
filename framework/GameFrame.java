@@ -11,10 +11,8 @@
     I have not discussed the Java language code in my program 
     with anyone other than my instructor or the teaching assistants 
     assigned to this course.
-
     I have not used Java language code obtained from another student, 
     or any other unauthorized source, either modified or unmodified.
-
     If any Java language code or documentation used in my program 
     was obtained from another source, such as a textbook or website, 
     that has been clearly noted with a proper citation in the comments 
@@ -160,9 +158,10 @@ public class GameFrame extends Canvas implements Runnable {
             if (GC.getWinnerPlayer() == playerID && playerID == 1 || playerID == 2 && GC.getWinnerPlayer() != playerID)  g2d.drawImage(win, (int) 0, (int) 0, getWidth(), getHeight(), null);
             else  g2d.drawImage(lose, (int) 0, (int) 0, getWidth(), getHeight(), null);
             reset = false;
+            GC.gameStart(false);
         }
         if (reset == false && KeyListener.reset == true) {
-            MouseEventListener.mode = 1;
+            MouseEventListener.mode = 0;
             GC.reset();
         }
         GC.draw(g2d);
@@ -317,5 +316,4 @@ public class GameFrame extends Canvas implements Runnable {
             }
         }
     }
-
 }

@@ -8,10 +8,8 @@
     I have not discussed the Java language code in my program 
     with anyone other than my instructor or the teaching assistants 
     assigned to this course.
-
     I have not used Java language code obtained from another student, 
     or any other unauthorized source, either modified or unmodified.
-
     If any Java language code or documentation used in my program 
     was obtained from another source, such as a textbook or website, 
     that has been clearly noted with a proper citation in the comments 
@@ -19,11 +17,13 @@
 */
 import java.io.*;
 import java.net.*;
-import java.util.*;
+//import java.util.*;
+
+//import javax.xml.crypto.Data;
 
 public class GameServer {
     private ServerSocket ss;
-    private ArrayList<Socket> sockets;
+    // (optional) private ArrayList<Socket> sockets;
     private int numPlayer;
     private int maxPlayers;
     private double[] p1props, p2props;
@@ -56,25 +56,12 @@ public class GameServer {
             System.out.println("IOException from GameServer constructor.");
         }
     }
-    
-    /*public void closeSocketsOnShutdown() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-          try {
-            for(Socket skt : sockets) {
-              skt.close();
-            }
-          } catch (IOException e) {
-            System.out.println("IOException from closeSocketsOnShutdown() method.");
-          }
-        }));
-      }*/
 
     public void waitForConnections() {
         try {
             System.out.println("NOW ACCEPTING CONNECTIONS...");
             while (numPlayer < maxPlayers) {
                 Socket sock = ss.accept();
-                sockets.add(sock);
                 DataInputStream dataIn = new DataInputStream(sock.getInputStream());
                 DataOutputStream dataOut = new DataOutputStream(sock.getOutputStream());
                 numPlayer++;
@@ -108,6 +95,7 @@ public class GameServer {
             System.out.println("IOException from waitForConnections() method.");
         }
     }
+
     private class ReadFromClient implements Runnable {
         private int playerID;
         private DataInputStream dataIn;
@@ -191,7 +179,6 @@ public class GameServer {
 
     public static void main(String[] args) {
         GameServer gs = new GameServer();
-        //gs.closeSocketsOnShutdown();
         gs.waitForConnections();
     }
 }

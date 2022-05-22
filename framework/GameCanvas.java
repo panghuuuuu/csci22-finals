@@ -86,7 +86,6 @@ public class GameCanvas extends JComponent {
                 if (playerID == 1 && scoreP1 == 5 || scoreP2 == 5 && playerID == 2) winnerPlayer = 1;
                 else winnerPlayer = 2;
                 gameEnd = true;
-                gameStart = false;
             }
         }
     }
