@@ -56,6 +56,9 @@ public class GameCanvas extends JComponent {
         playerID = n;
         w = new Wall(171, 79, 815, 407, GameObjectID.Wall);
         addGameObject(new PushButton(15, 642, 120, 60, GameObjectID.Button, (Player) getP1()));
+
+        addGameObject(new Score(25, 25, 60, 90, GameObjectID.PlayerOneScore, ((Player) getP1()), this));
+        addGameObject(new Score(995, 25, 60, 90, GameObjectID.PlayerTwoScore, ((Player) getP1()), this));
     }
 
     /** Iterates through every gameObject and calls its update method */
@@ -91,9 +94,9 @@ public class GameCanvas extends JComponent {
                 temp.draw(g2d);
             }
             w.draw(g2d);
-            g2d.setFont(new Font("Karla", Font.BOLD | Font.ITALIC, 25));
-            g2d.setPaint(Color.YELLOW);
-            g2d.drawString("P1: " + (int) scoreP1 + "||" + " P2:" + (int) scoreP2, 118, 55);
+            //g2d.setFont(new Font("Karla", Font.BOLD | Font.ITALIC, 25));
+            //g2d.setPaint(Color.YELLOW);
+            //g2d.drawString("P1: " + (int) scoreP1 + "||" + " P2:" + (int) scoreP2, 118, 55);
         }
     }
 
@@ -141,6 +144,11 @@ public class GameCanvas extends JComponent {
             this.scoreP1 = i;
         }
     }
+    
+    public int[] getPoints() {
+        return new int[] {this.scoreP1, this.scoreP2};
+    }
+    
     public void respawn() {
         Player P1 = ((Player) getP1());
         P1.setX(P1.getSpawnProps()[0]);
