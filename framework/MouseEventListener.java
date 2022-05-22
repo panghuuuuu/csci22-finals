@@ -19,9 +19,6 @@ public class MouseEventListener extends MouseAdapter {
         if (mode == 0) {
             start = new Rectangle(200, 540, 675, 95);
             if(start.contains(e.getPoint())) mode = 1;
-            //if (200 <= e.getX() && e.getX() <= 875 && 638 <= e.getY() && e.getY() <= 540) {
-            //    mode = 1;
-            //}    
         }   
     }
 

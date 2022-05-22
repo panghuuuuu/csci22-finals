@@ -25,6 +25,7 @@ public class GameStarter {
     public static void main(String[] args) {
         GameFrame gf = new GameFrame();
         gf.setFocusable(true);
+        //gf.closeSocketOnShutdown();
         gf.connectToServer();
         gf.setUpGUI();
         gf.start();

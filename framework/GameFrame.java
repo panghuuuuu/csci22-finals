@@ -44,6 +44,7 @@ public class GameFrame extends Canvas implements Runnable {
     private boolean running;
     private Boolean waitP1 = true;
     private Boolean waitP2 = true;
+    private Boolean reset = false;
     private Thread thread;
     private GameCanvas GC;
     private Socket socket;
@@ -130,8 +131,6 @@ public class GameFrame extends Canvas implements Runnable {
         Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
         g2d.drawImage(bg, (int) 0, (int) 0, getWidth(), getHeight(), null);
         if (MouseEventListener.mode == 0) {
-           //g2d.setColor(new Color(255, 0, 0));
-           //g2d.fillRect(200, 540, 675, 95);
             GC.gameStart(false);
         }
 
@@ -145,6 +144,26 @@ public class GameFrame extends Canvas implements Runnable {
         if (waitP1 == false && waitP2 == false) {
             MouseEventListener.mode = 2;
             GC.gameStart(true);
+        }
+
+        if (GC.getGameEnd() == true) {
+            BufferedImage win = null;
+            BufferedImage lose = null;
+
+            try {
+                win = ImageIO.read(getClass().getResourceAsStream("/res/win-lose/win.png"));
+                lose = ImageIO.read(getClass().getResourceAsStream("/res/win-lose/lose.png"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    
+            if (GC.getWinnerPlayer() == playerID && playerID == 1 || playerID == 2 && GC.getWinnerPlayer() != playerID)  g2d.drawImage(win, (int) 0, (int) 0, getWidth(), getHeight(), null);
+            else  g2d.drawImage(lose, (int) 0, (int) 0, getWidth(), getHeight(), null);
+            reset = false;
+        }
+        if (reset == false && KeyListener.reset == true) {
+            MouseEventListener.mode = 1;
+            GC.reset();
         }
         GC.draw(g2d);
         g2d.dispose();
@@ -193,7 +212,17 @@ public class GameFrame extends Canvas implements Runnable {
             System.out.println("IOException from connectToServer() method.");
         }
     }
-
+    /*public void closeSocketOnShutdown() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+          try {
+            socket.close();
+          } catch (IOException e) {
+            System.out.println("IOException from closeSocketOnShutdown() method.");
+          }
+        }));
+    }
+    */
+    
     private class ReadFromServer implements Runnable {
         private DataInputStream dataIn;
 

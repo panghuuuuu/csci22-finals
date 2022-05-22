@@ -3,7 +3,7 @@ package framework;
 import java.awt.event.*;
 
 public class KeyListener extends KeyAdapter {
-    public static boolean right = false, left = false, up = false, down = false, push = false;
+    public static boolean right = false, left = false, up = false, down = false, push = false, reset = false;
     private GameCanvas gCanvas;
 
     public KeyListener(GameCanvas gc) {
@@ -34,6 +34,9 @@ public class KeyListener extends KeyAdapter {
         if(key == KeyEvent.VK_SPACE) {
             push = true; // Push
         }
+        if(key == KeyEvent.VK_ENTER) {
+            reset = true; // Play again
+        }
     }
 
     @Override
@@ -55,6 +58,9 @@ public class KeyListener extends KeyAdapter {
         }
         if(key == KeyEvent.VK_SPACE) {
             push = false;
+        }
+        if(key == KeyEvent.VK_ENTER) {
+            reset = false;
         }
     }
 }

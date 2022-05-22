@@ -33,12 +33,13 @@ public class GameCanvas extends JComponent {
     private GameObject temp;
     private int scoreP1 = 0;
     private int scoreP2 = 0;
-    private int serverPoint = 0;
     private Wall w;
     private int playerID;
     private Boolean gameStart = false;
     private Boolean waitP1 = true;
     private Boolean waitP2 = true;
+    private int winnerPlayer = 0;
+    private Boolean gameEnd = false;
 
     public GameCanvas(int w, int h) {
 
@@ -80,6 +81,13 @@ public class GameCanvas extends JComponent {
                 if (((Player) getP1()).getPlayerID() == 1) scoreP2++; else if (((Player) getP1()).getPlayerID() == 2) scoreP1++;
                 respawn();
             }
+
+            if (scoreP1 == 5 || scoreP2 == 5) {
+                if (playerID == 1 && scoreP1 == 5 || scoreP2 == 5 && playerID == 2) winnerPlayer = 1;
+                else winnerPlayer = 2;
+                gameEnd = true;
+                gameStart = false;
+            }
         }
     }
 
@@ -94,9 +102,6 @@ public class GameCanvas extends JComponent {
                 temp.draw(g2d);
             }
             w.draw(g2d);
-            //g2d.setFont(new Font("Karla", Font.BOLD | Font.ITALIC, 25));
-            //g2d.setPaint(Color.YELLOW);
-            //g2d.drawString("P1: " + (int) scoreP1 + "||" + " P2:" + (int) scoreP2, 118, 55);
         }
     }
 
@@ -166,5 +171,23 @@ public class GameCanvas extends JComponent {
     }
     public Boolean getP2Wait() {
         return waitP2;
+    }
+
+    public int getWinnerPlayer() {
+        return winnerPlayer;
+    }
+
+    public Boolean getGameEnd() {
+        return gameEnd; 
+    }
+
+    public void reset() {
+        scoreP1 = 0;
+        scoreP2 = 0;
+        gameStart = false;
+        waitP1 = true;
+        waitP2 = true;
+        winnerPlayer = 0;
+        gameEnd = false;
     }
 }

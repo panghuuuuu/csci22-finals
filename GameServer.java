@@ -19,13 +19,11 @@
 */
 import java.io.*;
 import java.net.*;
-//import java.util.*;
-
-//import javax.xml.crypto.Data;
+import java.util.*;
 
 public class GameServer {
     private ServerSocket ss;
-    // (optional) private ArrayList<Socket> sockets;
+    private ArrayList<Socket> sockets;
     private int numPlayer;
     private int maxPlayers;
     private double[] p1props, p2props;
@@ -58,12 +56,25 @@ public class GameServer {
             System.out.println("IOException from GameServer constructor.");
         }
     }
+    
+    /*public void closeSocketsOnShutdown() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+          try {
+            for(Socket skt : sockets) {
+              skt.close();
+            }
+          } catch (IOException e) {
+            System.out.println("IOException from closeSocketsOnShutdown() method.");
+          }
+        }));
+      }*/
 
     public void waitForConnections() {
         try {
             System.out.println("NOW ACCEPTING CONNECTIONS...");
             while (numPlayer < maxPlayers) {
                 Socket sock = ss.accept();
+                sockets.add(sock);
                 DataInputStream dataIn = new DataInputStream(sock.getInputStream());
                 DataOutputStream dataOut = new DataOutputStream(sock.getOutputStream());
                 numPlayer++;
@@ -97,7 +108,6 @@ public class GameServer {
             System.out.println("IOException from waitForConnections() method.");
         }
     }
-
     private class ReadFromClient implements Runnable {
         private int playerID;
         private DataInputStream dataIn;
@@ -150,8 +160,6 @@ public class GameServer {
                         dataOut.writeUTF(p2dir);
                         dataOut.writeBoolean(waitP1);
                         dataOut.writeInt(p2Point);
-                        //dataOut.writeDouble(p2x);
-                        //dataOut.writeDouble(p2y);
                         dataOut.flush();
                     } else {
                         for (int i = 0; i < p1props.length; i++) dataOut.writeDouble(p1props[i]);
@@ -159,8 +167,6 @@ public class GameServer {
                         dataOut.writeUTF(p1dir);
                         dataOut.writeBoolean(waitP2);
                         dataOut.writeInt(p1Point);
-                        //dataOut.writeDouble(p1x);
-                        //dataOut.writeDouble(p1y);
                         dataOut.flush();
                     }
                     try {
@@ -185,6 +191,7 @@ public class GameServer {
 
     public static void main(String[] args) {
         GameServer gs = new GameServer();
+        //gs.closeSocketsOnShutdown();
         gs.waitForConnections();
     }
 }
