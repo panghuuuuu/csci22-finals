@@ -1,11 +1,33 @@
-package gameobjects;
+/**
+    A Players class that controls the players' movements. The program 
+    allows the player to move using arrow keys. It also allows the player
+    to push the opponent using the push function, which can be triggered by 
+    spacebar, and collision detection. It also contains player animations 
+    which work through changing the player's sprite depending on the movements
+    made by the user. 
+    @author Angelo Joaquin B. Alvarez (210295)
+    @author Ysabella B. Panghulan (214521)
+    @version May 14, 2022
+**/
+/*
+    I have not discussed the Java language code in my program 
+    with anyone other than my instructor or the teaching assistants 
+    assigned to this course.
 
+    I have not used Java language code obtained from another student, 
+    or any other unauthorized source, either modified or unmodified.
+
+    If any Java language code or documentation used in my program 
+    was obtained from another source, such as a textbook or website, 
+    that has been clearly noted with a proper citation in the comments 
+    of my program.
+*/
+
+package gameobjects;
 import java.awt.*;
 import java.awt.image.*;
 import java.util.*;
-
 import javax.imageio.ImageIO;
-
 import framework.*;
 
 public class Player extends GameObject {
@@ -33,10 +55,12 @@ public class Player extends GameObject {
 
     @Override
     public void update(ArrayList<GameObject> gameObject) {
+        // For Player 1
         if (this.id == GameObjectID.PlayerOne) {
             xSpeed = 0;
             ySpeed = 0;
-            
+
+            // Movement controls
             if (KeyListener.right) {
                 setXSpeed(movementSpeed);
                 moveX(xSpeed);
@@ -60,8 +84,9 @@ public class Player extends GameObject {
                 direction = "Down";
                 moveDown = true;
             } else moveDown = false;
+
+            // Push mechanic 
             if (KeyListener.push && !pushCoolDown()) {
-                //activePush = true;
                 switch(direction) {
                     case "Right":
                     case "Left":
@@ -78,7 +103,7 @@ public class Player extends GameObject {
                 pushCoolDown();
             }
 
-
+            // Slide mechanic when player is pushed
             if (slideX) {
                if(pushSpeed > 0) {
                     x += pushSpeed;
@@ -110,11 +135,11 @@ public class Player extends GameObject {
             GameObject tempObject = gameObject.get(i);
             switch(tempObject.getID()) {
                 case PlayerTwo:
-                    //Collision
+                    // Collision
                     HorizontalCollision(tempObject);
                     VerticalCollision(tempObject);
 
-                    //Push Mechanic
+                    // Push Mechanic
                     if(((Player) tempObject).getHRange().intersects(getHBounds())) {
                         HPushable(tempObject);
                     }
@@ -129,6 +154,7 @@ public class Player extends GameObject {
             } 
         }
 
+        // For sprite animations
         spriteCounter++;
         if (spriteCounter > 5) {
 
@@ -151,6 +177,7 @@ public class Player extends GameObject {
             spriteCounter = 0;
         }
 
+        // For sprite blink animation
         blinkCoolDown++;
         if (blinkCoolDown > 300 && spriteNum == 0) {
             blink = true;
@@ -162,94 +189,69 @@ public class Player extends GameObject {
     public void draw(Graphics2D g2d) {
 
         BufferedImage image = null;
-        //Idle Animation
+        // Idle Animation
         switch(direction) {
+            // Player sprite when it moves to the right
             case "Right":
                 if (blink && !moveRight && !pushingAnimH) {
                     image = idleR[spriteNum];
                     if(spriteNum == 3) blink = false;
-                } else if (moveRight && !pushingAnimH) {
+                } else if (moveRight && !pushingAnimH) { // Player is moving to the right but not pushing
                     image = moveR[spriteNum];
-                } else if (pushingAnimH) {
+                } else if (pushingAnimH) { // Player is moving to the right and pushing
                     if(spriteNum != 0 && compAnim == false) {spriteNum = 0; compAnim = true;}
                     image = pushR[spriteNum];
                     if(spriteNum == 3) {pushingAnimH = false;  activePush = true;}
-                } else image = idleR[0];
+                } else image = idleR[0]; // Player is idle
                 break;
+
+            // Player sprite when it moves to the left
             case "Left":
                 if (blink && !moveLeft) {
                     image = idleL[spriteNum];
                     if(spriteNum == 3) blink = false;
-                } else if (moveLeft  && !pushingAnimH) {
+                } else if (moveLeft  && !pushingAnimH) { // Player is moving to the left but not pushing
                     image = moveL[spriteNum];
-                } else if (pushingAnimH) {
+                } else if (pushingAnimH) { // Player is moving to the right and pushing
                     if(spriteNum != 0 && compAnim == false) {spriteNum = 0; compAnim = true;}
                     image = pushL[spriteNum];
                     if(spriteNum == 3) {pushingAnimH = false;  activePush = true;}
-                } else image = idleL[0];
+                } else image = idleL[0]; // Player is idle
                 break;
+
+            // Player sprite when it moves downwards  
             case "Down":
                 if (blink && !moveDown) {
                     image = idleD[spriteNum];
                     if(spriteNum == 3) blink = false;
-                } else if (moveDown  && !pushingAnimV) {
+                } else if (moveDown  && !pushingAnimV) { // Player is moving downwards but not pushing
                     image = moveD[spriteNum];
-                } else if (pushingAnimV) {
+                } else if (pushingAnimV) { // Player is moving downwards and pushing
                     if(spriteNum != 0 && compAnim == false) {spriteNum = 0; compAnim = true;}
                     image = pushD[spriteNum];
                     if(spriteNum == 3) {pushingAnimV = false;  activePush = true;}
-                } else image = idleD[0];
+                } else image = idleD[0];  // Player is idle
                 break;
+            
+            // Player sprite when it moves upwards
             case "Up":
-                if (pushingAnimV) {
+                if (pushingAnimV) { // Player is moving upwards and pushing
                     if(spriteNum != 0 && compAnim == false) {spriteNum = 0; compAnim = true;}
                     image = pushU[spriteNum];
                     if(spriteNum == 3) {pushingAnimV = false; activePush = true;}
                 } else 
-                    image = idleU[0];
+                    image = idleU[0]; // Player is idle
             default:
                 break;
         }
-        if(!pushingAnimH)
+    
+        if(!pushingAnimH)  // Player sprite if it is not pushing
             g2d.drawImage(image, (int) x-15, (int) y-15, (int) width+30, (int) height+30, null);
         else
             g2d.drawImage(image, (int) x-65, (int) y-15, (int) width+130, (int) height+30, null);
     }
 
-    public boolean getPush() {
-        return activePush;
-    }
-    public void setPush(boolean push) {
-        this.activePush = push;
-    }
-
-    public String getDir() {
-        return direction;
-    }
-    public void setDir(String dir) {
-        this.direction = dir;
-    }
-
-    //Pushing Range
-    public Rectangle getHRange() {
-        double vx = this.x - this.width;
-        double vy = this.y + 4;
-        double vw = this.width*3;
-        double vh = this.height - 8;
-
-        return new Rectangle((int) vx, (int) vy, (int) vw, (int) vh);
-    }
-
-    public Rectangle getVRange() {
-        double vx = this.x + 4;
-        double vy = this.y - this.height;
-        double vw = this.width - 8;
-        double vh = this.height*3;
-
-        return new Rectangle((int) vx, (int) vy, (int) vw, (int) vh);
-    }
-
-    //Collision
+    // Adjustements for Horizontal Collision
     public void HorizontalCollision(GameObject p2) {
         if(getHBounds().intersects(p2.getHBounds())) { 
             if(p2.getXSpeed() < 0) {
@@ -264,6 +266,8 @@ public class Player extends GameObject {
             }
         }
     }
+    
+    // Adjustements for Vertical Collision
     public void VerticalCollision(GameObject p2) {
         if(getVBounds().intersects(p2.getVBounds())) {
             if(p2.getYSpeed() < 0) {
@@ -279,7 +283,7 @@ public class Player extends GameObject {
         }
     }
 
-    //Push Mechanic
+    // Horizontal Push Mechanic
     public void HPushable(GameObject p2) {
             if(((Player) p2).getPush()) {
                 switch(((Player) p2).getDir()) {
@@ -302,6 +306,8 @@ public class Player extends GameObject {
                 }
             }
     }
+
+    // Vertical Push Mechanic
     public void VPushable(GameObject p2) {
             if(((Player) p2).getPush()) {
                 switch(((Player) p2).getDir()) {
@@ -325,6 +331,52 @@ public class Player extends GameObject {
             }
     }
 
+    // For respawn 
+    public void setSpawnProps(int n) {
+        if (n == 1) {
+            spawnProps = new int[] {248, 282, 1};
+        } else {
+            spawnProps = new int[] {856, 282, 0};
+        }
+    }
+
+    // Accessor Methods
+
+    public boolean getPush() {
+        return activePush;
+    }
+    public void setPush(boolean push) {
+        this.activePush = push;
+    }
+
+    public String getDir() {
+        return direction;
+    }
+    public void setDir(String dir) {
+        this.direction = dir;
+    }
+
+    // Horizontal Pushing Range
+    public Rectangle getHRange() {
+        double vx = this.x - this.width;
+        double vy = this.y + 4;
+        double vw = this.width*3;
+        double vh = this.height - 8;
+
+        return new Rectangle((int) vx, (int) vy, (int) vw, (int) vh);
+    }
+
+    // Vertical Pushing Range
+    public Rectangle getVRange() {
+        double vx = this.x + 4;
+        double vy = this.y - this.height;
+        double vw = this.width - 8;
+        double vh = this.height*3;
+
+        return new Rectangle((int) vx, (int) vy, (int) vw, (int) vh);
+    }
+
+    // For cooldown time
     private boolean pushCoolDown() {
         if (activePush) {
             coolDown = true;
@@ -349,13 +401,6 @@ public class Player extends GameObject {
         return this.playerID;
     }
 
-    public void setSpawnProps(int n) {
-        if (n == 1) {
-            spawnProps = new int[] {248, 282, 1};
-        } else {
-            spawnProps = new int[] {856, 282, 0};
-        }
-    }
     public int[] getSpawnProps() {
         return this.spawnProps;
     }
