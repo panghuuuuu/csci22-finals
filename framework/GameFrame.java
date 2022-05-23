@@ -29,6 +29,7 @@ import java.net.*;
 import gameobjects.*;
 import javax.imageio.*;
 import javax.sound.sampled.*;
+import java.util.*;
 
 public class GameFrame extends Canvas implements Runnable {
 
@@ -56,7 +57,7 @@ public class GameFrame extends Canvas implements Runnable {
     // Constructor method for GameFrame class
     public GameFrame() {
         gameFrame = new JFrame();
-        GC = new GameCanvas(SCREEN_WIDTH, SCREEN_HEIGHT);
+        GC = new GameCanvas();
         getBackgrounds();
     }
 
@@ -241,7 +242,12 @@ public class GameFrame extends Canvas implements Runnable {
 
     public void connectToServer() {
         try {
-            socket = new Socket("localhost", 45371);
+            Scanner console = new Scanner(System.in);
+            System.out.print("IP Address: ");
+            String ipAddress = console.nextLine();
+            System.out.print("Port number: ");
+            int portNumber = Integer.parseInt(console.nextLine());
+            socket = new Socket(ipAddress, portNumber);
             DataInputStream dataIn = new DataInputStream(socket.getInputStream());
             DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream());
             playerID = dataIn.readInt();
