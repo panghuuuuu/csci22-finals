@@ -1,5 +1,11 @@
 /**
-    This is a template for a Java file.
+   A GameServer class that creates the server for the clients of the game. 
+   It handles the connection between the two players. It contains a 
+   ReadFromClient method that reads values from the client and a 
+   WriteToClient method that writes values to the players. It sends and 
+   receives the push, direction, and wait boolean values and the point 
+   integers of the players.   
+
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
     @version May 14, 2022
@@ -55,26 +61,28 @@ public class GameServer {
         }
     }
 
+    // Server accepting connections method
     public void waitForConnections() {
         try {
             System.out.println("NOW ACCEPTING CONNECTIONS...");
             while (numPlayer < maxPlayers) {
-                Socket sock = ss.accept();
-                sockets.add(sock);
+                Socket sock = ss.accept(); // Creates a new socket 
+                sockets.add(sock); // Add the new socket to ArrayList
                 DataInputStream dataIn = new DataInputStream(sock.getInputStream());
                 DataOutputStream dataOut = new DataOutputStream(sock.getOutputStream());
-                numPlayer++;
+                numPlayer++; // For keeping track of player number
                 dataOut.writeInt(numPlayer);
                 System.out.println("Player #" + numPlayer + " has connected.");
 
                 ReadFromClient rfc = new ReadFromClient(numPlayer, dataIn);
                 WriteToClient wtc = new WriteToClient(numPlayer, dataOut);
 
+                // For player 1
                 if (numPlayer == 1) {
                     p1Socket = sock;
                     p1ReadRunnable = rfc;
                     p1WriteRunnable = wtc;
-                } else {
+                } else { // Wait until player 2 connects 
                     p2Socket = sock;
                     p2ReadRunnable = rfc;
                     p2WriteRunnable = wtc;
@@ -95,6 +103,7 @@ public class GameServer {
         }
     }
 
+    // Close the sockets when the program exits
     public void closeSocketsOnShutdown() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
           try {
@@ -120,17 +129,19 @@ public class GameServer {
         public void run() {
             try {
                 while (true) {
+                    // Reads the push & direction boolean and point integer of Player 1
                     if (playerID == 1) {
                         for (int i = 0; i < p1props.length; i++) p1props[i] = dataIn.readDouble();
-                        p1push = dataIn.readBoolean();
+                        p1push = dataIn.readBoolean(); 
                         p1dir = dataIn.readUTF();
-                        waitP2 = dataIn.readBoolean();
+                        waitP2 = dataIn.readBoolean(); // Reads the boolean if Player 2 already pressed start button 
                         p1Point = dataIn.readInt();
                     } else {
+                        // Reads the push, direction and point integer of Player 2
                         for (int i = 0; i < p2props.length; i++) p2props[i] = dataIn.readDouble();
                         p2push = dataIn.readBoolean();
-                        p2dir = dataIn.readUTF();
-                        waitP1 = dataIn.readBoolean();
+                        p2dir = dataIn.readUTF(); 
+                        waitP1 = dataIn.readBoolean(); // Reads the boolean if Player 1 already pressed start button 
                         p2Point = dataIn.readInt();
                     }
                 }
@@ -154,17 +165,19 @@ public class GameServer {
             try {
                 while (true) {
                     if (playerID == 1) {
+                        // Writes the push & direction boolean and point integer of Player 2
                         for (int i = 0; i < p2props.length; i++) dataOut.writeDouble(p2props[i]);
                         dataOut.writeBoolean(p2push);
                         dataOut.writeUTF(p2dir);
-                        dataOut.writeBoolean(waitP1);
+                        dataOut.writeBoolean(waitP1); // Writes the boolean if Player 1 already pressed start button 
                         dataOut.writeInt(p2Point);
                         dataOut.flush();
                     } else {
+                        // Writes the push & direction boolean and point integer of Player 1
                         for (int i = 0; i < p1props.length; i++) dataOut.writeDouble(p1props[i]);
                         dataOut.writeBoolean(p1push);
                         dataOut.writeUTF(p1dir);
-                        dataOut.writeBoolean(waitP2);
+                        dataOut.writeBoolean(waitP2); // Writes the boolean if Player 2 already pressed start button 
                         dataOut.writeInt(p1Point);
                         dataOut.flush();
                     }
@@ -188,6 +201,7 @@ public class GameServer {
         }
     }
 
+    // Main method
     public static void main(String[] args) {
         GameServer gs = new GameServer();
         gs.closeSocketsOnShutdown();
