@@ -186,7 +186,7 @@ public class GameFrame extends Canvas implements Runnable {
     public void getBackgrounds () {
         try {
             image = new BufferedImage[5];
-            image[0] = ImageIO.read(getClass().getResourceAsStream("/res/landscape/sampleStart.png"));
+            image[0] = ImageIO.read(getClass().getResourceAsStream("/res/landscape/start.png"));
             image[1] = ImageIO.read(getClass().getResourceAsStream("/res/landscape/loading.png"));
             image[2] = ImageIO.read(getClass().getResourceAsStream("/res/landscape/sample.png"));
             image[3] = ImageIO.read(getClass().getResourceAsStream("/res/win-lose/win.png"));
