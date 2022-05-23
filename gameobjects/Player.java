@@ -522,6 +522,7 @@ public class Player extends GameObject {
     //ANIMATION//
     /////////////
 
+    /** Sets the player sprite depending on the player's movement */
     public void getPlayerImages() {
         try {
             idleR = new BufferedImage[4];
