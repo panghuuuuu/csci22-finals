@@ -90,6 +90,7 @@ public class GameFrame extends Canvas implements Runnable {
         thread.start();
     }
 
+    //RealTutsGML. (2013, Sep. 15). Java Game Programming #2 - Game Loop [Video]. Youtube. https://www.youtube.com/watch?v=Zh7YiiEuJFw&list=PLWms45O3n--54U-22GDqKMRGlXROOZtMx&index=2
     /**
      * Overrides the run method of Runnable. Also called the Gameloop that
      * calls for updates per second [UPS] for non-animation updates and
@@ -231,6 +232,7 @@ public class GameFrame extends Canvas implements Runnable {
         }
     }
 
+    //Max O'Didily. (2018, Nov. 29). How to Play, Loop, Pause and Stop Music in Java [Video]. Youtube. https://www.youtube.com/watch?v=TErboGLHZGA
     /** Plays Music from a specified file path
      *  @param filepath {@code String} file path of a .wav file
      */
