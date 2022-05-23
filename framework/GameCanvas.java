@@ -41,7 +41,7 @@ public class GameCanvas extends JComponent {
     private int winnerPlayer = 0;
     private Boolean gameEnd = false;
 
-    public GameCanvas(int w, int h) {
+    public GameCanvas() {
 
     }
 
