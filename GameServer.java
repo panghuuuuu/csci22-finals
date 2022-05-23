@@ -43,7 +43,14 @@ public class GameServer {
     private WriteToClient p2WriteRunnable;
 
     private int p1Point, p2Point;
-
+    
+    /**
+     * Constructor method of the GameServer Class
+     * instantiaing the sockets ArrayList, Arrays of 
+     * p1props and p2props, p1push, p1dir, p1Point, 
+     * p2Point, number of players and max players 
+     * and creates a new ServerSocket.   
+     */
     public GameServer() {
         System.out.println("=== Game Server ===");
         numPlayer = 0;
@@ -61,7 +68,7 @@ public class GameServer {
         }
     }
 
-    // Server accepting connections method
+    /** Server accepting connections method */
     public void waitForConnections() {
         try {
             System.out.println("NOW ACCEPTING CONNECTIONS...");
@@ -103,7 +110,7 @@ public class GameServer {
         }
     }
 
-    // Close the sockets when the program exits
+    /* Close the sockets when the program exits */
     public void closeSocketsOnShutdown() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
           try {
@@ -116,6 +123,7 @@ public class GameServer {
         }));
       }
     
+    /** Class that reads the values from the client and puts them into the values of player 1 and 2 */
     private class ReadFromClient implements Runnable {
         private int playerID;
         private DataInputStream dataIn;
@@ -151,6 +159,7 @@ public class GameServer {
         }
     }
 
+    /** Class that Writes the Values of Player 1 and Player 2 to the Clients */
     private class WriteToClient implements Runnable {
         private int playerID;
         private DataOutputStream dataOut;
