@@ -29,23 +29,39 @@ import framework.*;
 
 public class Wall extends GameObject {
 
+    /**
+     * Constructor method of the Wall Class
+     * instantiaing the x and y positions, width, 
+     * and height of the wall
+     */
     public Wall(double xPos, double yPos, double w, double h, GameObjectID objectID) {
         super(xPos, yPos, w, h, objectID);
     }
 
+    /**
+     * Overrides the update method of GameObject.
+     * @param gameObject {@code ArrayList<GameObject>} ArrayList of GameObjects
+     */
     @Override
     public void update(ArrayList<GameObject> gameObject) {
 
     }
 
+    /**
+     * Overrides the draw method of GameObject.
+     * @param g2d {@code Graphics2D} Graphics2D object
+     */
     @Override
     public void draw(Graphics2D g2d) {
         // Display platform
         g2d.setColor(new Color(1f,0f,0f,0f ));
         g2d.fillRect((int) x, (int) y, (int) width, (int) height);
     }
-
-    // Collision detection between player and platform
+ 
+    /**
+     * Collision detection between player and platform
+     * @return Determines if the player is out of bounds. 
+     */
     public Boolean isOut(GameObject player) {
         return (this.x + this.width <= player.getX() ||
                 this.x >= player.getX() + player.getWidth() ||
