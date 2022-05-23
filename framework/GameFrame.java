@@ -24,12 +24,11 @@ package framework;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import gameobjects.*;
-import javax.imageio.ImageIO;
+import javax.imageio.*;
+import javax.sound.sampled.*;
 
 public class GameFrame extends Canvas implements Runnable {
 
@@ -39,10 +38,12 @@ public class GameFrame extends Canvas implements Runnable {
     private final double UPDATE_RATE = 1.0d / 60.0d;
     private int FPS, UPS;
     private long nextTime;
+    private Clip clip = null;
     private boolean running;
     private Boolean waitP1 = true;
     private Boolean waitP2 = true;
-    private Boolean reset = false;
+    private Boolean reset = true;
+    private Boolean music1 = false, music2 = false, music3 = false;
     private Thread thread;
     private GameCanvas GC;
     private Socket socket;
@@ -113,6 +114,7 @@ public class GameFrame extends Canvas implements Runnable {
     /** Calls for non-animation updates for every instance of GameObject */
     public void update() {
         GC.update();
+        musicHandler();
         UPS++;       
     }
 
@@ -129,6 +131,7 @@ public class GameFrame extends Canvas implements Runnable {
         Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
         g2d.drawImage(bg, (int) 0, (int) 0, getWidth(), getHeight(), null);
         if (MouseEventListener.mode == 0) {
+            reset = true;
             GC.gameStart(false);
         }
 
@@ -149,8 +152,8 @@ public class GameFrame extends Canvas implements Runnable {
             BufferedImage lose = null;
 
             try {
-                win = ImageIO.read(getClass().getResourceAsStream("/res/win-lose/win.png"));
-                lose = ImageIO.read(getClass().getResourceAsStream("/res/win-lose/lose.png"));
+                win = image[3];
+                lose = image[4];
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -163,6 +166,7 @@ public class GameFrame extends Canvas implements Runnable {
         if (reset == false && KeyListener.reset == true) {
             MouseEventListener.mode = 0;
             GC.reset();
+            GC.respawn();
         }
         GC.draw(g2d);
         g2d.dispose();
@@ -181,17 +185,58 @@ public class GameFrame extends Canvas implements Runnable {
 
     public void getBackgrounds () {
         try {
-            image = new BufferedImage[3];
+            image = new BufferedImage[5];
             image[0] = ImageIO.read(getClass().getResourceAsStream("/res/landscape/sampleStart.png"));
             image[1] = ImageIO.read(getClass().getResourceAsStream("/res/landscape/loading.png"));
             image[2] = ImageIO.read(getClass().getResourceAsStream("/res/landscape/sample.png"));
+            image[3] = ImageIO.read(getClass().getResourceAsStream("/res/win-lose/win.png"));
+            image[4] = ImageIO.read(getClass().getResourceAsStream("/res/win-lose/lose.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void playMusic(String filepath) {
+        try {
+            File musicPath = new File(filepath);
+            if (musicPath.exists()) {
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(musicPath);
+                clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.start();
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+            } else {
+                System.out.println("No File Found");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void musicHandler() {
+        if(MouseEventListener.mode == 0) {
+            if(music1) return;
+            if(music3 || music2) clip.close();
+            playMusic("res/music/pvzMainMenu.wav");
+            music1 = true;
+            music2 = music3 = false;
+        } else if (MouseEventListener.mode == 2 && !GC.getGameEnd()){
+            if(music2) return;
+            clip.close();
+            playMusic("res/music/pvzStage.wav");
+            music2 = true;
+            music1 = music3 = false;
+        } else if (GC.getGameEnd()) {
+            if(music3) return;
+            clip.close();
+            playMusic("res/music/pvzGameOver.wav");
+            music3 = true;
+            music1 = music2 = false;
+        }
+    }
+
     //////////////////
-    // SERVER METHODS//
+    //SERVER METHODS//
     //////////////////
 
     public void connectToServer() {

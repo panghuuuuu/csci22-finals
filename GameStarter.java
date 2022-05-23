@@ -19,6 +19,7 @@
 */
 
 import framework.GameFrame;
+import framework.MouseEventListener;
 
 public class GameStarter {
 
