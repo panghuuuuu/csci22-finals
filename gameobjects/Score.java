@@ -37,6 +37,11 @@ public class Score extends GameObject {
     private BufferedImage[] activeP1, activeP2, points, p1, p2;
     private int p1Score, p2Score;
 
+    /**
+     * Constructor method of the Score Class
+     * instantiaing the current player1 and Game Canvas,
+     * running the getScoreImages method.
+     */
     public Score(double xPos, double yPos, double w, double h, GameObjectID objectID, Player p, GameCanvas g) {
         super(xPos, yPos, w, h, objectID);
         this.player1 = p;
@@ -44,6 +49,10 @@ public class Score extends GameObject {
         getScoreImages();
     }
 
+    /**
+     * Overrides the update method of GameObject.
+     * @param gameObject {@code ArrayList<GameObject>} ArrayList of GameObjects
+     */
     @Override
     public void update(ArrayList<GameObject> gameObject) {
         //Retrieves the score of both players from Game Canvas
@@ -51,6 +60,10 @@ public class Score extends GameObject {
         p2Score = GC.getPoints()[1];
     }
 
+    /**
+     * Overrides the draw method of GameObject.
+     * @param g2d {@code Graphics2D} Graphics2D object
+     */
     @Override
     public void draw(Graphics2D g2d) {
         //Score animations
@@ -79,10 +92,12 @@ public class Score extends GameObject {
         g2d.drawImage(image, (int) x, (int) y, (int) width, (int) height, null);
         
     }
+
     /////////////
     //ANIMATION//
     /////////////
-
+    
+    /** Sets the score image depending on the players' scores */
     public void getScoreImages() {
         try {
             activeP1 = new BufferedImage[1];
