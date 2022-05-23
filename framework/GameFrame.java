@@ -2,7 +2,8 @@
     A GameFrame class that extends the Canvas class and Implements
     the Runnable interface to instantialize a working JFrame display
     and a Thread that handles the animation and non-animation updates
-    of the game.
+    of the game. Also handles the Local connection to the Server and
+    Reading and writing of variables within said server.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
     @version May 14, 2022
@@ -52,9 +53,12 @@ public class GameFrame extends Canvas implements Runnable {
     private WriteToServer wtsRunnable;
     private int playerID;
     private BufferedImage[] image;
-    private double[] PlayerPositions;
 
-    // Constructor method for GameFrame class
+    /**
+     * Constructor method of the GameFrame Class
+     * creating a new JFrame, GameCanvas and getting the backgrounds
+     * for the Menu System.
+     */
     public GameFrame() {
         gameFrame = new JFrame();
         GC = new GameCanvas();
@@ -73,7 +77,7 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.add(this);
         gameFrame.pack();
         gameFrame.setFocusable(true);
-        GC.newPlayer(playerID);
+        GC.constructObjects(playerID);
     }
 
     /** Starts a new {@code Thread} thread */
@@ -116,21 +120,8 @@ public class GameFrame extends Canvas implements Runnable {
     public void update() {
         GC.update();
         musicHandler();
-        UPS++;       
-    }
+        UPS++;
 
-    /** Calls for animation updates for every instance of GameObject */
-    public void draw() {
-        FPS++;
-        BufferStrategy bs = this.getBufferStrategy();
-        if (bs == null) {
-            this.createBufferStrategy(2);
-            return;
-        }
-        BufferedImage bg = image[MouseEventListener.mode];
-        
-        Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
-        g2d.drawImage(bg, (int) 0, (int) 0, getWidth(), getHeight(), null);
         if (MouseEventListener.mode == 0) {
             reset = true;
             GC.gameStart(false);
@@ -147,7 +138,49 @@ public class GameFrame extends Canvas implements Runnable {
             MouseEventListener.mode = 2;
             GC.gameStart(true);
         }
+        
+        if (reset == false && KeyListener.reset == true) {
+            MouseEventListener.mode = 0;
+            GC.reset();
+            GC.respawn();
+        }
+    }
 
+    /** Calls for animation updates for every instance of GameObject */
+    public void draw() {
+        FPS++;
+
+        //Creates a Buffer Strategy to buffer Frames per Second.
+        BufferStrategy bs = this.getBufferStrategy();
+        if (bs == null) {
+            this.createBufferStrategy(2);
+            return;
+        }
+
+        //Creates the Backgrounds
+        BufferedImage bg = image[MouseEventListener.mode];
+        Graphics2D g2d = (Graphics2D) bs.getDrawGraphics();
+        g2d.drawImage(bg, (int) 0, (int) 0, getWidth(), getHeight(), null);
+
+        
+        //if (MouseEventListener.mode == 0) {
+        //    reset = true;
+        //    GC.gameStart(false);
+        //}
+
+        //if (playerID == 1) {
+        //    waitP1 = GC.getP1Wait();
+        //} else {
+        //    waitP2 = GC.getP2Wait();
+        //}
+
+    
+        //if (waitP1 == false && waitP2 == false) {
+        //    MouseEventListener.mode = 2;
+        //    GC.gameStart(true);
+        //}
+
+        //Handles the Game Over Screens
         if (GC.getGameEnd() == true) {
             BufferedImage win = null;
             BufferedImage lose = null;
@@ -159,18 +192,18 @@ public class GameFrame extends Canvas implements Runnable {
                 e.printStackTrace();
             }
     
-            if (GC.getWinnerPlayer() == playerID && playerID == 1 || playerID == 2 && GC.getWinnerPlayer() != playerID)  g2d.drawImage(win, (int) 0, (int) 0, getWidth(), getHeight(), null);
-            else  g2d.drawImage(lose, (int) 0, (int) 0, getWidth(), getHeight(), null);
+            if (GC.getWinnerPlayer() == playerID && playerID == 1 || playerID == 2 && GC.getWinnerPlayer() != playerID)  
+                g2d.drawImage(win, (int) 0, (int) 0, getWidth(), getHeight(), null); //Win Screen
+            else  
+                g2d.drawImage(lose, (int) 0, (int) 0, getWidth(), getHeight(), null); //Lose Screen
+            
             reset = false;
             GC.gameStart(false);
         }
-        if (reset == false && KeyListener.reset == true) {
-            MouseEventListener.mode = 0;
-            GC.reset();
-            GC.respawn();
-        }
+
+        //Draws GameCanvas Objects
         GC.draw(g2d);
-        g2d.dispose();
+        g2d.dispose(); // Disposes the Graphics
         bs.show();
     }
 
@@ -184,6 +217,7 @@ public class GameFrame extends Canvas implements Runnable {
         }
     }
 
+    /** Gets all the images for the Game's Backgrounds */
     public void getBackgrounds () {
         try {
             image = new BufferedImage[5];
@@ -197,6 +231,9 @@ public class GameFrame extends Canvas implements Runnable {
         }
     }
 
+    /** Plays Music from a specified file path
+     *  @param filepath {@code String} file path of a .wav file
+     */
     public void playMusic(String filepath) {
         try {
             File musicPath = new File(filepath);
@@ -214,6 +251,7 @@ public class GameFrame extends Canvas implements Runnable {
         }
     }
 
+    /** Handles the Background music of the game */
     public void musicHandler() {
         if(MouseEventListener.mode == 0) {
             if(music1) return;
@@ -240,6 +278,7 @@ public class GameFrame extends Canvas implements Runnable {
     //SERVER METHODS//
     //////////////////
 
+    /** Connects to a local or online Server  */
     public void connectToServer() {
         try {
             Scanner console = new Scanner(System.in);
@@ -248,6 +287,7 @@ public class GameFrame extends Canvas implements Runnable {
             System.out.print("Port number: ");
             int portNumber = Integer.parseInt(console.nextLine());
             socket = new Socket(ipAddress, portNumber);
+            console.close();
             DataInputStream dataIn = new DataInputStream(socket.getInputStream());
             DataOutputStream dataOut = new DataOutputStream(socket.getOutputStream());
             playerID = dataIn.readInt();
@@ -271,6 +311,8 @@ public class GameFrame extends Canvas implements Runnable {
           }
         }));
     }
+
+    /** Class that reads the values from the server and puts them into the values of the local Player 2 */
     private class ReadFromServer implements Runnable {
         private DataInputStream dataIn;
 
@@ -322,6 +364,7 @@ public class GameFrame extends Canvas implements Runnable {
         }
     }
 
+    /** Class that Writes the Values of Player 1 to the Server */
     private class WriteToServer implements Runnable {
         private DataOutputStream dataOut;
 

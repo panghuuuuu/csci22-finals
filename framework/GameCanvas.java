@@ -52,7 +52,7 @@ public class GameCanvas extends JComponent {
      * GameCanvas class needed for the Game to run.
      * @param n {@code int} PlayerId of Current Players
      */
-    public void newPlayer(int n) {
+    public void constructObjects(int n) {
         //Creates Two Players depending on their PlayerIds (n)
         if (n == 1) {
             addGameObject(new Player(248, 282, 50, 50, GameObjectID.PlayerOne, n));
