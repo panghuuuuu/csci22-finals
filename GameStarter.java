@@ -1,5 +1,7 @@
 /**
-    This is a template for a Java file.
+    This is a GameStarter program that contains the main method
+    and instantializes the GameFrame class and calling its methods
+    to setup the overall Game.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
     @version May 14, 2022

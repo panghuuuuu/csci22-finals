@@ -72,8 +72,8 @@ public class GameFrame extends Canvas implements Runnable {
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameFrame.setTitle("Player " + playerID);
         gameFrame.setVisible(true);
-        this.addKeyListener(new KeyListener(GC));
-        this.addMouseListener(new MouseEventListener(GC));
+        this.addKeyListener(new KeyListener());
+        this.addMouseListener(new MouseEventListener());
         gameFrame.add(this);
         gameFrame.pack();
         gameFrame.setFocusable(true);
