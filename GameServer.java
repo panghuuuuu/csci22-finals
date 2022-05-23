@@ -8,10 +8,8 @@
     I have not discussed the Java language code in my program 
     with anyone other than my instructor or the teaching assistants 
     assigned to this course.
-
     I have not used Java language code obtained from another student, 
     or any other unauthorized source, either modified or unmodified.
-
     If any Java language code or documentation used in my program 
     was obtained from another source, such as a textbook or website, 
     that has been clearly noted with a proper citation in the comments 
@@ -20,100 +18,179 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 public class GameServer {
     private ServerSocket ss;
     private ArrayList<Socket> sockets;
-    private int clientNum = 1;
+    private int numPlayer;
+    private int maxPlayers;
+    private double[] p1props, p2props;
+    private boolean p1push, p2push;
+    private String p1dir, p2dir;
+
+    private Socket p1Socket;
+    private Socket p2Socket;
+    private Boolean waitP1 = true;
+    private Boolean waitP2 = true;
+    private ReadFromClient p1ReadRunnable;
+    private ReadFromClient p2ReadRunnable;
+    private WriteToClient p1WriteRunnable;
+    private WriteToClient p2WriteRunnable;
+
+    private int p1Point, p2Point;
+
     public GameServer() {
+        System.out.println("=== Game Server ===");
+        numPlayer = 0;
+        maxPlayers = 2;
         sockets = new ArrayList<>();
+        p1props = new double[] {50, 50, 0, 0};
+        p2props = new double[] {200, 200, 0, 0};
+        p1push = p2push = false;
+        p1dir = p2dir = "Right";
+        p1Point = p2Point = 0;
         try {
-            ss = new ServerSocket(60001);
-        } catch(IOException ex) {
+            ss = new ServerSocket(45371);
+        } catch (IOException ex) {
             System.out.println("IOException from GameServer constructor.");
         }
-        System.out.println("THE CHAT SERVER HAS BEEN CREATED.");
     }
-    // ensure that all sockets in ArrayList are closed when program exits
-    // (either normally or some user interrupt)
-    public void closeSocketsOnShutdown() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-        try {
-            for(Socket skt : sockets) {
-            skt.close();
-            }
-        } catch (IOException e) {
-            System.out.println("IOException from closeSocketsOnShutdown() method.");
-        }
-        }));
-    }
+
     public void waitForConnections() {
         try {
-        System.out.println("NOW ACCEPTING CONNECTIONS...");
-        // loop to allow mutliple clients to connect
-        while(true) {
-            Socket sock = ss.accept();
-            sockets.add(sock); // add socket to ArrayList
-            // create runnable because server needs a thread for each client
-            ClientRunnable cr = new ClientRunnable(sock, clientNum);
-            clientNum++; // Use this integer to keep track of each client.
-                        // We're not really making use of this in this demo,
-                        // but this can be useful to id each client if you
-                        // want to add some logic that targets a specific client.
-            cr.startThread();
-        }
-        } catch(IOException ex) {
+            System.out.println("NOW ACCEPTING CONNECTIONS...");
+            while (numPlayer < maxPlayers) {
+                Socket sock = ss.accept();
+                sockets.add(sock);
+                DataInputStream dataIn = new DataInputStream(sock.getInputStream());
+                DataOutputStream dataOut = new DataOutputStream(sock.getOutputStream());
+                numPlayer++;
+                dataOut.writeInt(numPlayer);
+                System.out.println("Player #" + numPlayer + " has connected.");
+
+                ReadFromClient rfc = new ReadFromClient(numPlayer, dataIn);
+                WriteToClient wtc = new WriteToClient(numPlayer, dataOut);
+
+                if (numPlayer == 1) {
+                    p1Socket = sock;
+                    p1ReadRunnable = rfc;
+                    p1WriteRunnable = wtc;
+                } else {
+                    p2Socket = sock;
+                    p2ReadRunnable = rfc;
+                    p2WriteRunnable = wtc;
+                    p1WriteRunnable.sendStartMsg();
+                    p2WriteRunnable.sendStartMsg();
+                    Thread readThreadP1 = new Thread(p1ReadRunnable);
+                    Thread readThreadP2 = new Thread(p2ReadRunnable);
+                    readThreadP1.start();
+                    readThreadP2.start();
+                    Thread writeThreadP1 = new Thread(p1WriteRunnable);
+                    Thread writeThreadP2 = new Thread(p2WriteRunnable);
+                    writeThreadP1.start();
+                    writeThreadP2.start();
+                }
+            }
+        } catch (IOException ex) {
             System.out.println("IOException from waitForConnections() method.");
         }
     }
-    private class ClientRunnable implements Runnable {
-        private Socket clientSocket;
+
+    public void closeSocketsOnShutdown() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+          try {
+            for(Socket skt : sockets) {
+              skt.close();
+            }
+          } catch (IOException e) {
+            System.out.println("IOException from closeSocketsOnShutdown() method.");
+          }
+        }));
+      }
+    
+    private class ReadFromClient implements Runnable {
+        private int playerID;
         private DataInputStream dataIn;
-        private DataOutputStream dataOut;
-        private int cid;
-        private String name;
-        public ClientRunnable(Socket sck, int n) {
-        clientSocket = sck;
-        cid = n;
-        try {
-            dataIn = new DataInputStream(clientSocket.getInputStream());
-            dataOut = new DataOutputStream(clientSocket.getOutputStream());
-        } catch(IOException ex) {
-            System.out.println("IOException from ChatServer constructor");
+
+        public ReadFromClient(int pid, DataInputStream in) {
+            playerID = pid;
+            dataIn = in;
+            System.out.println("RFC" + playerID + " Runnable created");
         }
-        }
-        public void startThread() {
-        Thread t = new Thread(this);
-        t.start();
-        }
+
         public void run() {
-        try {
-            dataOut.writeUTF("HELLO! WELCOME TO THE CHAT ROOM! WHAT IS YOUR NAME?");
-            name = dataIn.readUTF(); // read client's name
-            System.out.println("[" + name + "]" + " HAS ENTERED THE ROOM...");
-            // loop to continuously accept and print messages from the client
-            while(true) {
-            String messageFromClient = dataIn.readUTF();
-            System.out.println("[" + name + "]: " + messageFromClient);
-            if(messageFromClient.equals("exit")) {
-                sockets.remove(clientSocket);
-                clientSocket.close();
-                System.out.println("[" + name + "] HAS LEFT THE CHAT... :(");
-                break;
+            try {
+                while (true) {
+                    if (playerID == 1) {
+                        for (int i = 0; i < p1props.length; i++) p1props[i] = dataIn.readDouble();
+                        p1push = dataIn.readBoolean();
+                        p1dir = dataIn.readUTF();
+                        waitP2 = dataIn.readBoolean();
+                        p1Point = dataIn.readInt();
+                    } else {
+                        for (int i = 0; i < p2props.length; i++) p2props[i] = dataIn.readDouble();
+                        p2push = dataIn.readBoolean();
+                        p2dir = dataIn.readUTF();
+                        waitP1 = dataIn.readBoolean();
+                        p2Point = dataIn.readInt();
+                    }
+                }
+            } catch (IOException ex) {
+                System.out.println("IOException from RFC run()");
             }
-            }
-        } catch(IOException ex) {
-            // Note that if client exits improperly (e.g. just closes the console),
-            // then this will lead to an exception.
-            // You can attempt to handle that somehow in here.
-            // Or maybe just say "Oops. Something happened to [name]. RIP"
-            System.out.println("IOException from ClientRunnable's run() method.");
-        }
         }
     }
-    /*public static void main(String[] args) {
-        ChatServer cs = new ChatServer();
-        cs.closeSocketsOnShutdown();
-        cs.waitForConnections();
-    }*/
+
+    private class WriteToClient implements Runnable {
+        private int playerID;
+        private DataOutputStream dataOut;
+
+        public WriteToClient(int pid, DataOutputStream out) {
+            playerID = pid;
+            dataOut = out;
+            System.out.println("WTC" + playerID + " Runnable created");
+        }
+
+        public void run() {
+            try {
+                while (true) {
+                    if (playerID == 1) {
+                        for (int i = 0; i < p2props.length; i++) dataOut.writeDouble(p2props[i]);
+                        dataOut.writeBoolean(p2push);
+                        dataOut.writeUTF(p2dir);
+                        dataOut.writeBoolean(waitP1);
+                        dataOut.writeInt(p2Point);
+                        dataOut.flush();
+                    } else {
+                        for (int i = 0; i < p1props.length; i++) dataOut.writeDouble(p1props[i]);
+                        dataOut.writeBoolean(p1push);
+                        dataOut.writeUTF(p1dir);
+                        dataOut.writeBoolean(waitP2);
+                        dataOut.writeInt(p1Point);
+                        dataOut.flush();
+                    }
+                    try {
+                        Thread.sleep(25);
+                    } catch (InterruptedException ex) {
+                        System.out.println("InterruptedException from WTC run()");
+                    }
+                }
+            } catch (IOException ex) {
+                System.out.println("IOException from WTC run()");
+            }
+        }
+
+        public void sendStartMsg() {
+            try {
+                dataOut.writeUTF("We now have 2 players.");
+            } catch (IOException ex) {
+                System.out.println("IOException from sendStartMsg()");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        GameServer gs = new GameServer();
+        gs.closeSocketsOnShutdown();
+        gs.waitForConnections();
+    }
 }
