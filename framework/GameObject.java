@@ -1,6 +1,8 @@
 /**
     A GameObject abstract class that handles all the common
-    properties of the objects present in the game.
+    properties of the objects present in the game. It also
+    contains the Update and Draw methods that will handle
+    the Animation and non-animation updates of the game.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
     @version May 14, 2022
@@ -32,9 +34,11 @@ public abstract class GameObject {
     protected double xSpeed = 0, ySpeed = 0;
 
     /**
-    Constructor Method for a GameObject instance
-        @param xPos The Initial x Position of the Object {@code Double}
-        @param yPos The Initial y Position of the Object {@code Double}
+    Constructs a new GameObject instance.
+        @param xPos The Initial x Position of the Object {@code double}
+        @param yPos The Initial y Position of the Object {@code double}
+        @param w The Initial width of the Object {@code double}
+        @param h The initial height of the Object {@cod double}
         @param ObjectID The Object ID of an Object {@code GameObjectID}
     **/
     public GameObject(double xPos, double yPos, double w, double h, GameObjectID objectID) {

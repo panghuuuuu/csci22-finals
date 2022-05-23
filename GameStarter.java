@@ -1,6 +1,6 @@
 /**
     This is a GameStarter program that contains the main method
-    and instantializes the GameFrame class and calling its methods
+    and instantializes the GameFrame class. It also calls its methods
     to setup the overall Game.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
@@ -24,6 +24,7 @@ import framework.GameFrame;
 
 public class GameStarter {
 
+    /** The Main Program which Creates a New Instance of GameFrame */
     public static void main(String[] args) {
         GameFrame gf = new GameFrame();
         gf.setFocusable(true);

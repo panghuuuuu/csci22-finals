@@ -1,6 +1,8 @@
 /**
     An Enum class to help handle the names of the instances
-    of the GameObject interface.
+    of the GameObject interface. It helps in the identification
+    of the instances of GameObjects in the ArrayList present in
+    GameCanvas.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
     @version May 14, 2022

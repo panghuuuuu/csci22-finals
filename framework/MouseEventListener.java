@@ -1,7 +1,8 @@
 /**
     A MouseListener class that extends the abstract class
     MouseAdapter to handle Mouseclicks during the Main
-    Menu sequences of the Game.
+    Menu sequences of the Game. The modes are publicly 
+    accessable for the menu mechanics.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
     @version May 24, 2022
@@ -28,24 +29,19 @@ import java.awt.*;
 public class MouseEventListener extends MouseAdapter {
     private Rectangle start;
     public static int mode = 0;
-    public static int landscape = 0;
 
+    /** Creates a New MouseEvent Listener Instance */
     public MouseEventListener() {
     }
 
     @Override
+    /** Invoked when the mouse has been clicked
+     * @param e The event to be processed.
+     */
     public void mouseClicked(MouseEvent e) {
         if (mode == 0) {
             start = new Rectangle(568, 494, 273, 128); // Area of the Start Button
             if(start.contains(e.getPoint())) mode = 1; 
         }   
-    }
-
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    public void mouseReleased(MouseEvent e) {
-
     }
 }

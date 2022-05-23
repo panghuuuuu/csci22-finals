@@ -43,6 +43,7 @@ public class GameCanvas extends JComponent {
     private int winnerPlayer = 0;
     private Boolean gameEnd = false;
 
+    /** Creates a New Instance of GameCanvas */
     public GameCanvas() {
 
     }

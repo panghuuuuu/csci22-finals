@@ -2,7 +2,7 @@
     A GameFrame class that extends the Canvas class and Implements
     the Runnable interface to instantialize a working JFrame display
     and a Thread that handles the animation and non-animation updates
-    of the game. Also handles the Local connection to the Server and
+    of the game. It also handles the Local connection to the Server and
     Reading and writing of variables within said server.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
@@ -55,7 +55,7 @@ public class GameFrame extends Canvas implements Runnable {
     private BufferedImage[] image;
 
     /**
-     * Constructor method of the GameFrame Class
+     * Creates a New instance of a GameFrame
      * creating a new JFrame, GameCanvas and getting the backgrounds
      * for the Menu System.
      */
@@ -327,7 +327,7 @@ public class GameFrame extends Canvas implements Runnable {
                     GameObject P2 = GC.getP2();
                     if (P2 == null) {
                         P2 = GC.getP2();
-                        System.out.println("PLAYER TWO NOT INITIALIZED");
+                        //System.out.println("PLAYER TWO NOT INITIALIZED");
                     }
                     if (P2 != null) {
                         P2 = GC.getP2();
@@ -379,7 +379,7 @@ public class GameFrame extends Canvas implements Runnable {
                     GameObject P1 = GC.getP1();
                     if (P1 == null) {
                         P1 = GC.getP1();
-                        System.out.println("PLAYER ONE NOT INITIALIZED");
+                        //System.out.println("PLAYER ONE NOT INITIALIZED");
                     }
                     if (P1 != null) {
                         P1 = GC.getP1();

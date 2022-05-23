@@ -1,7 +1,8 @@
 /**
     A KeyListener Class that extends the abstract class
     KeyAdapter to handle the KeyBindings and KeyControls
-    of the Game.
+    of the Game. Booleans are publicly available so that
+    any class can access the key bindings.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
     @version May 24, 2022
@@ -28,10 +29,14 @@ import java.awt.event.*;
 public class KeyListener extends KeyAdapter {
     public static boolean right = false, left = false, up = false, down = false, push = false, reset = false;
 
+    /** Constructs a New KeyListener Instance */
     public KeyListener() {
     }
 
     @Override
+    /** Invoked when a key has been pressed
+     * @param e The event to be processed.
+     */
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_ESCAPE) {
@@ -58,6 +63,9 @@ public class KeyListener extends KeyAdapter {
     }
 
     @Override
+    /** Invoked when a key has been released
+     * @param e The event to be processed.
+     */
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
         if(key == KeyEvent.VK_RIGHT) { 
