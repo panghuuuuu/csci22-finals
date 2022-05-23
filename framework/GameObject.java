@@ -1,6 +1,6 @@
 /**
     A GameObject abstract class that handles all the common
-    properties of the object present in the game.
+    properties of the objects present in the game.
     @author Angelo Joaquin B. Alvarez (210295)
     @author Ysabella B. Panghulan (214521)
     @version May 14, 2022
@@ -111,7 +111,7 @@ public abstract class GameObject {
     public Rectangle getHBounds() {
         double hx = this.x + this.xSpeed;
         double hy = this.y + 2;
-        double hw = this.width + this.xSpeed/4;
+        double hw = this.width + this.xSpeed/2;
         double hh = this.height - 4;
 
         return new Rectangle((int) hx, (int) hy, (int) hw, (int) hh);
@@ -121,7 +121,7 @@ public abstract class GameObject {
         double vx = this.x + 2;
         double vy = this.y + this.ySpeed;
         double vw = this.width - 4;
-        double vh = this.height + this.ySpeed/4;
+        double vh = this.height + this.ySpeed/2;
 
         return new Rectangle((int) vx, (int) vy, (int) vw, (int) vh);
     }

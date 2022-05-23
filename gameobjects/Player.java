@@ -18,7 +18,7 @@ public class Player extends GameObject {
     private String direction = "Right";
     private int pushSpeed;
     private int spriteCounter, spriteNum;
-    private int coolDownCounter = 125;
+    private int coolDownCounter = 130;
     private int playerID;
 
     public Player(double xPos, double yPos, double w, double h, GameObjectID objectID, int pid) {
@@ -336,7 +336,7 @@ public class Player extends GameObject {
             coolDownCounter--;
         }
         if (coolDownCounter <= 0) {
-            coolDownCounter = 125; //2 seconds for 60 UPS
+            coolDownCounter = 130; //2 seconds for 60 UPS + 10 Frames for lag allowance
             coolDown = false;
         }
         return coolDown;
