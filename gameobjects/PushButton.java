@@ -36,14 +36,21 @@ public class PushButton extends GameObject {
     private BufferedImage[] available, coolDown;
     private int spriteCounter = 0, spriteNum = 0;
 
-
+    /**
+     * Constructor method of the PushButton Class
+     * instantiaing the player number and running 
+     * getButtonImages method.
+     */
     public PushButton(double xPos, double yPos, double w, double h, GameObjectID objectID, Player p) {
         super(xPos, yPos, w, h, objectID);
         this.player = p;
         getButtonImages();
     }
        
-
+    /**
+     * Overrides the update method of GameObject.
+     * @param gameObject {@code ArrayList<GameObject>} ArrayList of GameObjects
+     */
     @Override
     public void update(ArrayList<GameObject> gameObject) {
         // For player's sprite animations 
@@ -71,6 +78,10 @@ public class PushButton extends GameObject {
         }
     }
 
+    /**
+     * Overrides the draw method of GameObject.
+     * @param g2d {@code Graphics2D} Graphics2D object
+     */
     @Override
     public void draw(Graphics2D g2d) {
         // Display push button
@@ -83,6 +94,7 @@ public class PushButton extends GameObject {
     //ANIMATION//
     /////////////    
     
+    /** Sets the button image depending on the push cooldown */
     public void getButtonImages() {
         try {
             available = new BufferedImage[1];
